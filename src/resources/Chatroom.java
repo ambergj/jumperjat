@@ -14,7 +14,12 @@ public class Chatroom {
     // ArrayList<User> or ArrayList<String>
     // Maybe Map instead of ArrayList for no dublicates
     private ArrayList<User> userList;
-    private ArrayList<Message> messageHistory;
+    private ArrayList<Message> messageHistory = new ArrayList<>();
+
+    public Chatroom(String name, ArrayList<User> userList){
+        this.name = name;
+        this.userList = userList;
+    }
 
     /**
      * chechs if a user is in this Instancechat.
@@ -24,10 +29,9 @@ public class Chatroom {
      */
     private boolean userInChat(User firstUser){
         String firstUserName = firstUser.getUsername();
-        for(int i = 0; i < userList.size(); i++){
-            User secondUser = userList.get(i);
+        for (User secondUser : userList) {
             String secondUserName = secondUser.getUsername();
-            if(firstUserName.equals(secondUserName)){
+            if (firstUserName.equals(secondUserName)) {
                 return true;
             }
         }
@@ -40,9 +44,8 @@ public class Chatroom {
      * @param inputUsers Array of Users to input in Chat
      */
     public void addUsers(ArrayList<User> inputUsers){
-        for(int i = 0; i < inputUsers.size(); i++){
-            User movingUser = inputUsers.get(i);
-            if(!userInChat(movingUser)){
+        for (User movingUser : inputUsers) {
+            if (!userInChat(movingUser)) {
                 userList.add(movingUser);
             }
         }
