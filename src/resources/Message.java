@@ -29,6 +29,10 @@ public class Message {
         this.messageText = messageText;
     }
 
+    public String getChatroomID() {
+        return chatroomID;
+    }
+
     public String getAuthor() {
         return author;
     }
@@ -39,9 +43,5 @@ public class Message {
 
     public String getMessageText() {
         return messageText;
-    }
-
-    public String getChatroomID() {
-        return chatroomID;
     }
 }

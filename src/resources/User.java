@@ -8,6 +8,8 @@ package resources;
  * @since 1.8.0
  */
 public class User {
+    private static int counter = 0;
+    private int id;
     private String username;
     private String ipAddress;
 
@@ -32,6 +34,12 @@ public class User {
 
         this.username = username;
         this.ipAddress = ipAddress;
+        this.id = counter;
+        counter++;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getUsername() {
