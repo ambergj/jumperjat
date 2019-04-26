@@ -10,15 +10,17 @@ import java.util.ArrayList;
  * @since 1.8.0
  */
 public class Chatroom {
+    private static int counter = 0;
+    private int id;
     private String name;
-    // ArrayList<User> or ArrayList<String>
-    // Maybe Map instead of ArrayList for no dublicates
     private ArrayList<User> userList;
     private ArrayList<Message> messageHistory = new ArrayList<>();
 
     public Chatroom(String name, ArrayList<User> userList){
         this.name = name;
         this.userList = userList;
+        this.id = counter;
+        counter++;
     }
 
     /**
@@ -75,5 +77,9 @@ public class Chatroom {
      */
     public void addMessage(Message message){
         messageHistory.add(message);
+    }
+
+    public ArrayList<User> getUserList() {
+        return userList;
     }
 }
