@@ -10,7 +10,7 @@ package resources;
 import java.util.ArrayList;
 
 public class Protocol {
-    private String instruction;
+    private ProtocolType instruction;
     private ArrayList<Object> payload;
 
 
