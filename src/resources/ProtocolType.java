@@ -8,5 +8,6 @@ package resources;
  * @since 1.8.0
  */
 public enum ProtocolType {
+    CREATEUSER, CONFIRMUSER, ERRORUSER, JOINCHATROOM, DISTRIBUTECHATROOM, DISTRIBUTEMESSAGE, LEAVECHATROOM, ERROR;
     
 }

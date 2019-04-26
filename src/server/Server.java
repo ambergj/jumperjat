@@ -64,13 +64,11 @@ public class Server implements ReceiverProtocol {
     public void distributeMessage(User admin, Chatroom chatroom){
         ArrayList<User> users = chatroom.getUserList();
         for (User user : users) {
-            if(!user.equals(admin)){
-                createProtocol(null , user, "NewChatroom", chatroom);
-            }
+            createProtocol(null , user, "NewChatroom", chatroom);
         }
     }
 
-    public void createProtocol(User sender, User target, String ControllValue, Object payload){
+    public void createProtocol(User sender, User target, String Action, Object payload){
         Protocol protocol = new Protocol();
         sendProtocol(protocol);
     }
