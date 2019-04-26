@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox fx:id="root" fx:controller="clientView.RetrieveUsernameController" xmlns:fx="http://javafx.com/fxml">
+    <Label fx:id="lblChatroom">Chatroom</Label>
+    <HBox fx:id="hbox">
+        <Label fx:id="lblRequestChatroom">Join Chatroom:</Label>
+        <TextField fx:id="tfChatroom" />
+    </HBox>
+    <Button fx:id="btnRequestChatroom" text="Create" onAction="#requestChatroom"/>
+</VBox>

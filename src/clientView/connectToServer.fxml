@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox fx:id="root" fx:controller="clientView.ConnectToServerController" xmlns:fx="http://javafx.com/fxml">
+    <Label fx:id="lblHeader">Connect to Server</Label>
+    <HBox fx:id="hboxIP">
+        <Label fx:id="lblServerIP">Please enter the IP-Address of the server:</Label>
+        <TextField fx:id="tfServerIP" />
+    </HBox>
+    <HBox fx:id="hboxPort">
+        <Label fx:id="lblServerPort">Please enter the Port Number of the server:</Label>
+        <TextField fx:id="tfServerPort" />
+    </HBox>
+    <Button fx:id="btnConnect" text="Connect" onAction="#connect" />
+</VBox>

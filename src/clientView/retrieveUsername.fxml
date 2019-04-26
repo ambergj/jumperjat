@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox fx:id="root" fx:controller="clientView.RetrieveUsernameController" xmlns:fx="http://javafx.com/fxml">
+    <Label fx:id="lblErrorMessage"></Label>
+    <HBox fx:id="hbox">
+        <Label fx:id="lblRetrieveUsername">Username:</Label>
+        <TextField fx:id="tfUsername" />
+    </HBox>
+    <Button fx:id="btnCreateUser" text="Create" onAction="#createUser"/>
+</VBox>
