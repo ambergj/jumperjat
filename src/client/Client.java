@@ -76,7 +76,7 @@ public class Client extends Application implements ReceiverProtocol {
         try{
             //get local ip address:
             final DatagramSocket socket = new DatagramSocket();
-            //find out, which adaper is able to connect to internet (8.8.8.8)
+            //find out, which adapter is able to connect to internet (8.8.8.8)
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
             //retrieve ip address
             ip = socket.getLocalAddress().getHostAddress();
@@ -137,6 +137,31 @@ public class Client extends Application implements ReceiverProtocol {
     @Override
     public void receiveProtocol(Protocol protocol, ObjectOutputStream outStream) {
         //TODO Logik einfügen
+        switch (protocol.getAction()){
+            case CONFIRMUSER:
+                me = protocol.getPayloadUser();
+                try{
+                    LoaderContainer<SelectChatroomController> lc = LoaderContainer.loadUI(this, "/clientView/selectChatroom.fxml", SelectChatroomController.class);
+                    Parent root = lc.getRoot();
+                    SelectChatroomController ctrlSelectChatroom = lc.getCtrl();
+                    ctrlSelectChatroom.setClient(this);
+                    primaryStage.setScene(new Scene(root));
+                }catch (Exception e){
+                }
+                break;
+            case ERRORUSER:
+                //TODO handle user already exists
+                break;
+            case DISTRIBUTECHATROOM:
+                break;
+            case DISTRIBUTEMESSAGE:
+                break;
+            case LEAVECHATROOM:
+                break;
+            default:
+                break;
+
+        }
     }
     
     public static void main(String args[]) {
