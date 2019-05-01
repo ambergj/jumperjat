@@ -2,13 +2,12 @@ package resources;
 
 /**
  * A Class that defines the Protocol for the Chat.
+ * It is equipped with getters.
  *
  * @author
  * @version 2.0
  * @since 1.8.0
  */
-import java.util.ArrayList;
-
 public class Protocol {
     private ProtocolType action;
     private User sender;
@@ -26,5 +25,21 @@ public class Protocol {
         this.payload[2] = chatroomID;
         this.payload[3] = chatroom;
         this.payload[4] = message;
+    }
+
+    public ProtocolType getAction() {
+        return action;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public User getReciever() {
+        return reciever;
+    }
+
+    public Object getPayload(int pointer) {
+        return payload[pointer];
     }
 }
