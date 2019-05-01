@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox fx:id="root" fx:controller="serverView.ServerMainController" xmlns:fx="http://javafx.com/fxml">
+    <Label fx:id="lblContent">//Some interesting stats and options</Label>
+    <Button fx:id="btnOK" text="OK" onAction="#okMethod"/>
+</VBox>

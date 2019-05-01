@@ -1,5 +1,8 @@
 package resources;
 
+import java.io.IOException;
+
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 /**
@@ -12,6 +15,28 @@ import javafx.scene.Parent;
  * @since 1.8.0
  */
 public class LoaderContainer<T>{
+    
+    /**
+     * Additional utility method to load a fxml file
+     * 
+     * @param <T> Controller-Class of the fxml file
+     * @param calledFrom Object that calls this method; needed to load the url
+     * @param location Path to the file as String
+     * @param clazz Controller-Class of the fxml file
+     * @return LoaderContainer containing the root element and the controller object
+     * @throws IOException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public static <T> LoaderContainer<T> loadUI(Object calledFrom, String location, Class<T> clazz) throws IOException, InstantiationException, IllegalAccessException{
+        FXMLLoader loader = new FXMLLoader(calledFrom.getClass().getResource(location));
+        Parent root = loader.load();
+        T ctrl = (T)clazz.newInstance();
+        ctrl = loader.getController();
+        LoaderContainer<T> lc = new LoaderContainer<>(root, ctrl);
+        return lc;
+        
+    }
     
     private Parent root;
     private T ctrl;

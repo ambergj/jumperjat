@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox fx:id="root" fx:controller="serverView.StartServerController" xmlns:fx="http://javafx.com/fxml">
+    <Label fx:id="lblTitle">Start a Server</Label>
+    <HBox fx:id="hboxPort">
+        <Label fx:id="lblPort">Enter listening Port:</Label>
+        <TextField fx:id="txtPort" />
+    </HBox>
+    <Button fx:id="btnLaunch" text="Launch" onAction="#launch"/>
+</VBox>

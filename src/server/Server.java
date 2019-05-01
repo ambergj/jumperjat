@@ -1,8 +1,15 @@
 package server;
 
 import resources.*;
+import serverView.ServerMainController;
+import serverView.StartServerController;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.Parent;
+
+import java.net.*;
+import java.io.*;
 
 import java.util.ArrayList;
 
@@ -10,9 +17,51 @@ public class Server extends Application implements ReceiverProtocol {
     private ArrayList<Chatroom> chatroomsList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
     
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
+    private Stage primaryStage;
+    
     @Override
     public void start(Stage primaryStage) {
-        
+        this.primaryStage = primaryStage;
+        try {
+            LoaderContainer<StartServerController> lc = LoaderContainer.loadUI(this, "/serverView/startServer.fxml", StartServerController.class);
+            Parent root = lc.getRoot();
+            StartServerController ctrlStartServer = lc.getCtrl();
+            ctrlStartServer.setServer(this);
+            primaryStage.setScene(new Scene(root));
+            primaryStage.show();
+            
+        } catch (Exception e) {
+            //TODO handle exceptions
+            e.printStackTrace();
+        }
+    }
+    
+    public void launchServer(int port) {
+        try {
+            serverSocket = new ServerSocket(port);
+            LoaderContainer<ServerMainController> lc = LoaderContainer.loadUI(this,  "/serverView/serverMain.fxml",  ServerMainController.class);
+            Parent root = lc.getRoot();
+            ServerMainController ctrlServerMain = lc.getCtrl();
+            ctrlServerMain.setServer(this);
+            primaryStage.setScene(new Scene(root));
+            //TODO change 'while true' to 'while not stopped'
+            while(true) {
+                clientSocket = serverSocket.accept();
+                ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
+                ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                
+                Thread t = new ClientHandler(clientSocket, inStream, outStream);
+                t.start();
+            }
+        } catch (IOException e) {
+            //TODO handle exception
+            e.printStackTrace();
+        } catch (Exception e) {
+            //TODO handle exceptions
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -82,5 +131,9 @@ public class Server extends Application implements ReceiverProtocol {
 
     public void sendProtocol(Protocol protocol){
         //TODO Sends Protocol to target IP given in Protocol
+    }
+    
+    public static void main(String[] args) {
+        Application.launch(args);
     }
 }
