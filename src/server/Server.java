@@ -13,6 +13,8 @@ import java.io.*;
 
 import java.util.ArrayList;
 
+import static resources.ProtocolType.*;
+
 public class Server extends Application implements ReceiverProtocol {
     private ArrayList<Chatroom> chatroomsList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
@@ -66,42 +68,79 @@ public class Server extends Application implements ReceiverProtocol {
 
     @Override
     public void receiveProtocol(Protocol protocol) {
-        //TODO split Protocol in components and safe them in a variable
-
-        //TODO read out payload and redistribute it via createProtocol method.
-        switch (protocol){
-            case JoinUser:
-                createUser(protocol.getName(), protocol.getIpAddress());
+        Protocol answer;
+        switch (protocol.getAction()){
+            case CREATEUSER:
+                String name = protocol.getPayloadText();
+                String ipAddress = protocol.getPayloadIpAddress();
+                User user = new User(name , ipAddress);
+                if(user.equals(null)){
+                    answer = new Protocol(ERRORUSER, null, null, "Username already in use.", null, null, null, null, null);
+                }
+                else{
+                    Object[] payload = {null, null, user, null, null, null};
+                    answer = new Protocol(CONFIRMUSER, null, user, null, null, user, null, null, null);
+                }
+                answer.send(ipAddress);
                 break;
 
-            case CreateChatroom:
+            case JOINCHATROOM:
+                //TODO Check if Chatroom exists: join or create
                 createChatroom(protocol.getName(), protocol.getUserList);
                 break;
 
-            case DistributeChatroom:
+            //not used
+            case DISTRIBUTECHATROOM:
+                // Send new created Chatroom, not Used in this implementation
                 chatroom = protocol.getChatroom();
                 distributeChatroom(protocol.getUser(), chatroom);
                 break;
 
-            case DistributeMessage:
+            case DISTRIBUTEMESSAGE:
+                //TODO Send Message to Chatroom members, with distributeMessage methode
                 distributeMessage(Message(protocol.getMessage));
                 break;
 
-            case SENDING:
-                distributeMessage(chatroomID, message);
+            case LEAVECHATROOM:
                 break;
 
-            case DISTRIBUTECHATROOM:
-                break;
-
-            case NEWUSER:
+            default:
+                //return error
                 break;
         }
     }
 
-    public void createUser(String name, String ipAddress){
+    public int getUserId(User user){
+        for(int i = 0; i < usersList.size(); i++){
+            User testuser = usersList.get(i);
+            if(user.equals(testuser)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public boolean userExists(User user){
+        for(int i = 0; i < usersList.size(); i++){
+            User testuser = usersList.get(i);
+            if(user.equals(testuser)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public User createUser(String name, String ipAddress){
+        for(int i = 0; i < usersList.size(); i++){
+            User testuser = usersList.get(i);
+            String  testname = testuser.getUsername();
+            if(testname.equals(name)){
+                return null;
+            }
+        }
         User newUser = new User(name, ipAddress);
         usersList.add(newUser);
+        return newUser;
     }
 
     public void createChatroom(String name, ArrayList<User> userList){
@@ -109,27 +148,23 @@ public class Server extends Application implements ReceiverProtocol {
         chatroomsList.add(chatroom);
     }
 
+    // better Version maybe
     public void distributeMessage(int chatroomID, Message message){
         Chatroom chatroom = chatroomsList.get(chatroomID);
         ArrayList<User> users = chatroom.getUserList();
         for (User user : users) {
-            createProtocol(null , user, "NewChatroom", chatroom);
+            Protocol answer = new Protocol (null , user, "NewChatroom", chatroom);
         }
     }
 
     public void distributeMessage(User admin, Chatroom chatroom){
         ArrayList<User> users = chatroom.getUserList();
         for (User user : users) {
-            createProtocol(null , user, "NewChatroom", chatroom);
+            Protocol answer = new Protocol (null , user, "NewChatroom", chatroom);
         }
     }
 
-    public void createProtocol(User sender, User target, String Action, Object payload){
-        Protocol protocol = new Protocol();
-        sendProtocol(protocol);
-    }
-
-    public void sendProtocol(Protocol protocol){
+    public void sendProtocol(Protocol protocol, String ip){
         //TODO Sends Protocol to target IP given in Protocol
     }
     
