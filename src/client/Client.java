@@ -21,14 +21,7 @@ public class Client extends Application implements ReceiverProtocol {
     private ObjectInputStream inStream;
     private ObjectOutputStream outStream;
     
-//    private void connectToServer(Stage primaryStage) {
-//        
-//    }
-    
-    public void retrieveUsername() {
-        
-    }
-    
+    private User me;
     
     /**
      * This method launches the first UI-Layout, where a User enters the
@@ -68,6 +61,7 @@ public class Client extends Application implements ReceiverProtocol {
             LoaderContainer<RetrieveUsernameController> lc = LoaderContainer.loadUI(this, "/clientView/retrieveUsername.fxml", RetrieveUsernameController.class);
             Parent root = lc.getRoot();
             RetrieveUsernameController ctrlRetrieveUsername = lc.getCtrl();
+            ctrlRetrieveUsername.setClient(this);
             primaryStage.setScene(new Scene(root));
             
         } catch (Exception e) {
@@ -77,11 +71,47 @@ public class Client extends Application implements ReceiverProtocol {
     }
     
     public void requestUsername(String username) {
-        
+        //Protokoll-Objekt erstellen
+        String ip = null;
+        try{
+            //get local ip address:
+            final DatagramSocket socket = new DatagramSocket();
+            //find out, which adaper is able to connect to internet (8.8.8.8)
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            //retrieve ip address
+            ip = socket.getLocalAddress().getHostAddress();
+            socket.close();
+        } catch (Exception e) {
+            //TODO handle exceptions
+            ip = "";
+            e.printStackTrace();
+        }
+        Protocol protocol = new Protocol(ProtocolType.CREATEUSER,null,null,username,ip, null, null, null, null);
+        try {
+            outStream.writeObject(protocol);
+            Protocol answer = (Protocol)inStream.readObject();
+            switch (answer.getAction()) {
+                case ERRORUSER:
+                    //TODO handle user already exists 
+                    break;
+                case CONFIRMUSER:
+                    me = protocol.getPayloadUser();
+                    LoaderContainer<SelectChatroomController> lc = LoaderContainer.loadUI(this, "/clientView/selectChatroom.fxml", SelectChatroomController.class);
+                    Parent root = lc.getRoot();
+                    SelectChatroomController ctrlSelectChatroom = lc.getCtrl();
+                    primaryStage.setScene(new Scene(root));
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+        }
     }
     
     @Override
-    public void receiveProtocol(Protocol protocol) {
+    public void receiveProtocol(Protocol protocol, ObjectOutputStream outStream) {
         //TODO Logik einfügen
     }
     

@@ -1,18 +1,22 @@
 package server;
 
+import resources.*;
+
 import java.net.*;
+import java.io.*;
 
 import javafx.scene.control.Alert;
 
-import java.io.*;
 
 public class ClientHandler extends Thread{
 
+    private Server server;
     private Socket clientSocket;
     private ObjectInputStream inStream;
     private ObjectOutputStream outStream;
     
-    public ClientHandler(Socket clientSocket, ObjectInputStream inStream, ObjectOutputStream outStream) {
+    public ClientHandler(Server server, Socket clientSocket, ObjectInputStream inStream, ObjectOutputStream outStream) {
+        this.server = server;
         this.clientSocket = clientSocket;
         this.inStream = inStream;
         this.outStream = outStream;
@@ -20,11 +24,15 @@ public class ClientHandler extends Thread{
     
     @Override
     public void run() {
-        //TODO listen on port
-        System.out.println("Server is listening!");
-        Alert alert = new Alert(null);
-        alert.setContentText("New listening Thread");
-        alert.showAndWait();
+        //TODO change 'while true' to 'while not interrupted'
+        while(true) {
+            try {
+                Protocol request = (Protocol)inStream.readObject();
+                server.receiveProtocol(request, outStream);
+            } catch (Exception e) {
+                //TODO handle exceptions
+                e.printStackTrace();
+            }
+        }
     }
-    
 }

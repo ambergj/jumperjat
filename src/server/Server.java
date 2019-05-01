@@ -54,7 +54,7 @@ public class Server extends Application implements ReceiverProtocol {
                 ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
                 
-                Thread t = new ClientHandler(clientSocket, inStream, outStream);
+                Thread t = new ClientHandler(this, clientSocket, inStream, outStream);
                 t.start();
             }
         } catch (IOException e) {
@@ -67,8 +67,9 @@ public class Server extends Application implements ReceiverProtocol {
     }
 
     @Override
-    public void receiveProtocol(Protocol protocol) {
+    public void receiveProtocol(Protocol protocol, ObjectOutputStream outStream) {
         Protocol answer;
+        System.out.println("Ich bin jetzt hier!!!!");
         switch (protocol.getAction()){
             case CREATEUSER:
                 String name = protocol.getPayloadText();
@@ -81,7 +82,8 @@ public class Server extends Application implements ReceiverProtocol {
                     Object[] payload = {null, null, user, null, null, null};
                     answer = new Protocol(CONFIRMUSER, null, user, null, null, user, null, null, null);
                 }
-                answer.send(ipAddress);
+                outStream.writeObject(answer);
+//                answer.send(ipAddress);
                 break;
 
             case JOINCHATROOM:

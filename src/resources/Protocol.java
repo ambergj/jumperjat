@@ -1,5 +1,7 @@
 package resources;
 
+import java.io.Serializable;
+
 /**
  * A Class that defines the Protocol for the Chat.
  * It is equipped with getters.
@@ -8,7 +10,13 @@ package resources;
  * @version 2.0
  * @since 1.8.0
  */
-public class Protocol {
+public class Protocol implements Serializable{
+    /**
+     * What does this do?
+     */
+    private static final long serialVersionUID = 1L;
+    
+    
     private ProtocolType action;
     private User sender;
     private User reciever;
