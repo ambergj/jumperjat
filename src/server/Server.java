@@ -1,12 +1,19 @@
 package server;
 
 import resources.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-public class Server implements ReceiverProtocol {
+public class Server extends Application implements ReceiverProtocol {
     private ArrayList<Chatroom> chatroomsList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
+    
+    @Override
+    public void start(Stage primaryStage) {
+        
+    }
 
     @Override
     public void receiveProtocol(Protocol protocol) {

@@ -62,6 +62,7 @@ public class Client extends Application implements ReceiverProtocol {
             LoaderContainer<RetrieveUsernameController> lc = loadUI("/clientView/retrieveUsername.fxml", RetrieveUsernameController.class);
             Parent root = lc.getRoot();
             RetrieveUsernameController ctrlRetrieveUsername = lc.getCtrl();
+            primaryStage.setScene(new Scene(root));
             
         } catch (Exception e) {
             //TODO handle exception
@@ -78,6 +79,17 @@ public class Client extends Application implements ReceiverProtocol {
         launch(args);
     }
     
+    /**
+     * Additional utility method to load a fxml file
+     * 
+     * @param <T> Controller-Class of the fxml file
+     * @param location Path to the file as String
+     * @param clazz Controller-Class of the fxml file
+     * @return LoaderContainer containing the root element and the controller object
+     * @throws IOException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     private <T> LoaderContainer<T> loadUI(String location, Class<T> clazz) throws IOException, InstantiationException, IllegalAccessException{
         FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
         Parent root = loader.load();
