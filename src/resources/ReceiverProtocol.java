@@ -19,5 +19,5 @@ public interface ReceiverProtocol {
      * @param p incoming Protocol
      * @param outStream Output-Stream to send the response to
      */
-    public void receiveProtocol(Protocol p, ObjectOutputStream outStream);
+    public void receiveProtocol(Protocol p, MyOutStream outStream);
 }

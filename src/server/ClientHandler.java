@@ -13,9 +13,9 @@ public class ClientHandler extends Thread{
     private Server server;
     private Socket clientSocket;
     private ObjectInputStream inStream;
-    private ObjectOutputStream outStream;
+    private MyOutStream outStream;
     
-    public ClientHandler(Server server, Socket clientSocket, ObjectInputStream inStream, ObjectOutputStream outStream) {
+    public ClientHandler(Server server, Socket clientSocket, ObjectInputStream inStream, MyOutStream outStream) {
         this.server = server;
         this.clientSocket = clientSocket;
         this.inStream = inStream;

@@ -33,7 +33,7 @@ public class Protocol implements Serializable{
      * @param message new Message Object
      */
     public Protocol(ProtocolType action, User sender, User reciever,
-                    String text, ObjectOutputStream outStream, User user, Integer chatroomID, Chatroom chatroom, Message message){
+                    String text, MyOutStream outStream, User user, Integer chatroomID, Chatroom chatroom, Message message){
         this.action = action;
         this.sender = sender;
         this.reciever = reciever;
@@ -65,8 +65,8 @@ public class Protocol implements Serializable{
         return (String) payload[0];
     }
 
-    public ObjectOutputStream getPayloadOutStream() {
-        return (ObjectOutputStream) payload[1];
+    public MyOutStream getPayloadOutStream() {
+        return (MyOutStream) payload[1];
     }
 
     public User getPayloadUser() {

@@ -51,7 +51,7 @@ public class Server extends Application implements ReceiverProtocol {
             //TODO change 'while true' to 'while not stopped'
             while(true) {
                 clientSocket = serverSocket.accept();
-                ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
                 
                 Thread t = new ClientHandler(this, clientSocket, inStream, outStream);
@@ -67,12 +67,12 @@ public class Server extends Application implements ReceiverProtocol {
     }
 
     @Override
-    public void receiveProtocol(Protocol protocol, ObjectOutputStream outStream) {
+    public void receiveProtocol(Protocol protocol, MyOutStream outStream) {
         Protocol answer;
         switch (protocol.getAction()){
             case CREATEUSER:
                 String name = protocol.getPayloadText();
-//                ObjectOutputStream userOutStream = protocol.getPayloadOutStream();
+//                MyOutStream userOutStream = protocol.getPayloadOutStream();
                 User user = new User(name , outStream);
                 //TODO if test is always false
                 if(user.equals(null)){
@@ -150,7 +150,7 @@ public class Server extends Application implements ReceiverProtocol {
         return false;
     }
 
-    public User createUser(String name, ObjectOutputStream outStream){
+    public User createUser(String name, MyOutStream outStream){
         for(int i = 0; i < usersList.size(); i++){
             User testuser = usersList.get(i);
             String  testname = testuser.getUsername();

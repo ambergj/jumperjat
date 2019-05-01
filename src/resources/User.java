@@ -15,14 +15,14 @@ public class User implements Serializable{
     private static int counter = 0;
     private int id;
     private String username;
-    private ObjectOutputStream outStream;
+    private MyOutStream outStream;
 
     /**
      * Constructs User with the params.
      * @param username
      * @param ipAddress
      */
-    public User(String username, ObjectOutputStream outStream){
+    public User(String username, MyOutStream outStream){
         /*
         //eventual checking of Objects and throwing exception if already existing with that username
         //Probably much better to do it in Parent Class
@@ -50,7 +50,7 @@ public class User implements Serializable{
         return username;
     }
 
-    public ObjectOutputStream getOutStream() {
+    public MyOutStream getOutStream() {
         return outStream;
     }
 }

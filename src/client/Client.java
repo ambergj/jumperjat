@@ -19,7 +19,7 @@ public class Client extends Application implements ReceiverProtocol {
     
     private Socket clientSocket;
     private ObjectInputStream inStream;
-    private ObjectOutputStream outStream;
+    private MyOutStream outStream;
     
     private User me;
     
@@ -55,7 +55,7 @@ public class Client extends Application implements ReceiverProtocol {
         try {
             //establish connection
             clientSocket = new Socket(ip, port);
-            outStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            outStream = new MyOutStream(clientSocket.getOutputStream());
             inStream = new ObjectInputStream(clientSocket.getInputStream());
             //load UI
             LoaderContainer<RetrieveUsernameController> lc = LoaderContainer.loadUI(this, "/clientView/retrieveUsername.fxml", RetrieveUsernameController.class);
@@ -135,7 +135,7 @@ public class Client extends Application implements ReceiverProtocol {
     }
     
     @Override
-    public void receiveProtocol(Protocol protocol, ObjectOutputStream outStream) {
+    public void receiveProtocol(Protocol protocol, MyOutStream outStream) {
         //TODO Logik einfügen
         switch (protocol.getAction()){
             case CONFIRMUSER:
