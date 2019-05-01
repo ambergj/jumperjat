@@ -29,6 +29,11 @@ public class Client extends Application implements ReceiverProtocol {
         
     }
     
+    
+    /**
+     * This method launches the first UI-Layout, where a User enters the
+     * IP-Address and Port of the Server
+     */
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -43,22 +48,23 @@ public class Client extends Application implements ReceiverProtocol {
             //TODO handle Exceptions
             e.printStackTrace();
         }
-//        connectToServer(primaryStage);
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clientView/clientMain.fxml"));
-//        try {
-//            Parent root = loader.load();
-//            MainViewController ctrl = loader.getController();
-//        } catch (IOException e) {
-//            //TODO handle Exceptions
-//            e.printStackTrace();
-//        }
     }
     
+    /**
+     * This is the second logic-method in the process of startup.
+     * First, a connection to the server is established using
+     * the given IP-Address and Port from the preceeding UI.
+     * Second, the UI to retrieve the username is loaded
+     * @param ip Server-IP
+     * @param port Port on which the server is listening
+     */
     public void connectToServer(String ip, int port) {
         try {
+            //establish connection
             clientSocket = new Socket(ip, port);
             outStream = new ObjectOutputStream(clientSocket.getOutputStream());
             inStream = new ObjectInputStream(clientSocket.getInputStream());
+            //load UI
             LoaderContainer<RetrieveUsernameController> lc = LoaderContainer.loadUI(this, "/clientView/retrieveUsername.fxml", RetrieveUsernameController.class);
             Parent root = lc.getRoot();
             RetrieveUsernameController ctrlRetrieveUsername = lc.getCtrl();
@@ -68,6 +74,10 @@ public class Client extends Application implements ReceiverProtocol {
             //TODO handle exception
             e.printStackTrace();
         }
+    }
+    
+    public void requestUsername(String username) {
+        
     }
     
     @Override
