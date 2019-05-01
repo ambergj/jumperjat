@@ -75,6 +75,7 @@ public class Server extends Application implements ReceiverProtocol {
                 String name = protocol.getPayloadText();
                 String ipAddress = protocol.getPayloadIpAddress();
                 User user = new User(name , ipAddress);
+                //TODO if test is always false
                 if(user.equals(null)){
                     answer = new Protocol(ERRORUSER, null, null, "Username already in use.", null, null, null, null, null);
                 }
@@ -87,23 +88,27 @@ public class Server extends Application implements ReceiverProtocol {
                 break;
 
             case JOINCHATROOM:
-                //TODO Check if Chatroom exists: join or create
-                createChatroom(protocol.getName(), protocol.getUserList);
-                break;
-
-            //not used
-            case DISTRIBUTECHATROOM:
-                // Send new created Chatroom, not Used in this implementation
-                chatroom = protocol.getChatroom();
-                distributeChatroom(protocol.getUser(), chatroom);
+                User sender = protocol.getSender();
+                int id = getUserId(sender);
+                String chatroomName = protocol.getPayloadText();
+                if(chatroomExists(chatroomName)){
+                    User newUser = usersList.get(id);
+                    Chatroom modifyChatroom = getChatroom(chatroomName);
+                    modifyChatroom.addUsers(newUser);
+                }
+                else{
+                    createChatroom(chatroomName, sender);
+                }
+                Chatroom returnChatroom = getChatroom(chatroomName);
+                //TODO create Protocol with Chatroom and Send
                 break;
 
             case DISTRIBUTEMESSAGE:
-                //TODO Send Message to Chatroom members, with distributeMessage methode
-                distributeMessage(Message(protocol.getMessage));
+                //TODO Send Message to Chatroom members, with distributeMessage method
                 break;
 
             case LEAVECHATROOM:
+                //TODO User and Chatroom
                 break;
 
             default:
@@ -145,24 +150,42 @@ public class Server extends Application implements ReceiverProtocol {
         return newUser;
     }
 
-    public void createChatroom(String name, ArrayList<User> userList){
-        Chatroom chatroom = new Chatroom(name, userList);
+    public boolean chatroomExists(String chatroomName){
+        for(int i = 0; i < chatroomsList.size(); i++){
+            Chatroom testChatroom = chatroomsList.get(i);
+            String  testName = testChatroom.getName();
+            if(testName.equals(chatroomName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Chatroom getChatroom(String chatroomName){
+        for(int i = 0; i < chatroomsList.size(); i++){
+            Chatroom testChatroom = chatroomsList.get(i);
+            String  testName = testChatroom.getName();
+            if(testName.equals(chatroomName)){
+                return testChatroom;
+            }
+        }
+        return null;
+    }
+
+    private void joinChatroom(User newUser) {
+        //TODO
+    }
+
+    public void createChatroom(String name, User newUser){
+        Chatroom chatroom = new Chatroom(name, newUser);
         chatroomsList.add(chatroom);
     }
 
-    // better Version maybe
     public void distributeMessage(int chatroomID, Message message){
         Chatroom chatroom = chatroomsList.get(chatroomID);
         ArrayList<User> users = chatroom.getUserList();
         for (User user : users) {
-            Protocol answer = new Protocol (null , user, "NewChatroom", chatroom);
-        }
-    }
-
-    public void distributeMessage(User admin, Chatroom chatroom){
-        ArrayList<User> users = chatroom.getUserList();
-        for (User user : users) {
-            Protocol answer = new Protocol (null , user, "NewChatroom", chatroom);
+            Protocol answer = new Protocol (DISTRIBUTEMESSAGE, null, user, null, null, null, null, chatroom, message);
         }
     }
 

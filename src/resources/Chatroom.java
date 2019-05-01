@@ -13,20 +13,20 @@ public class Chatroom {
     private static int counter = 0;
     private int id;
     private String name;
-    private ArrayList<User> userList;
+    private ArrayList<User> userList = new ArrayList<>();
     private ArrayList<Message> messageHistory = new ArrayList<>();
 
-    public Chatroom(String name, ArrayList<User> userList){
+    public Chatroom(String name, User newUser){
         this.name = name;
-        this.userList = userList;
         this.id = counter;
+        userList.add(newUser);
         counter++;
     }
 
     /**
      * chechs if a user is in this Instancechat.
      *
-     * @param firstUser
+     * @param firstUser to test if in Chat
      * @return boolean
      */
     private boolean userInChat(User firstUser){
@@ -43,13 +43,11 @@ public class Chatroom {
     /**
      * Checks if the User isn't already in the List and adds the User.
      *
-     * @param inputUsers Array of Users to input in Chat
+     * @param inputUser User to input in Chat
      */
-    public void addUsers(ArrayList<User> inputUsers){
-        for (User movingUser : inputUsers) {
-            if (!userInChat(movingUser)) {
-                userList.add(movingUser);
-            }
+    public void addUsers(User inputUser){
+        if (!userInChat(inputUser)) {
+            userList.add(inputUser);
         }
     }
 
@@ -81,5 +79,9 @@ public class Chatroom {
 
     public ArrayList<User> getUserList() {
         return userList;
+    }
+
+    public String getName() {
+        return name;
     }
 }
