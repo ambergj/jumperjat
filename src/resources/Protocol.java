@@ -11,11 +11,6 @@ import java.io.Serializable;
  * @since 1.8.0
  */
 public class Protocol implements Serializable{
-    /**
-     * What does this do?
-     */
-    private static final long serialVersionUID = 1L;
-    
     
     private ProtocolType action;
     private User sender;

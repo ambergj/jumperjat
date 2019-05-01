@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<VBox fx:id="root" fx:controller="clientView.RetrieveUsernameController" xmlns:fx="http://javafx.com/fxml">
+<VBox fx:id="root" fx:controller="clientView.SelectChatroomController" xmlns:fx="http://javafx.com/fxml">
     <Label fx:id="lblChatroom">Chatroom</Label>
     <HBox fx:id="hbox">
         <Label fx:id="lblRequestChatroom">Join Chatroom:</Label>

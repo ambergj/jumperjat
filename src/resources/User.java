@@ -1,5 +1,7 @@
 package resources;
 
+import java.io.Serializable;
+
 /**
  * A Class that represents a User with an unique id as String and and IP-address.
  *
@@ -7,7 +9,8 @@ package resources;
  * @version 2.0
  * @since 1.8.0
  */
-public class User {
+public class User implements Serializable{
+
     private static int counter = 0;
     private int id;
     private String username;

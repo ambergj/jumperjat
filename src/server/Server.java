@@ -83,7 +83,13 @@ public class Server extends Application implements ReceiverProtocol {
                     Object[] payload = {null, null, user, null, null, null};
                     answer = new Protocol(CONFIRMUSER, null, user, null, null, user, null, null, null);
                 }
-                outStream.writeObject(answer);
+                try {
+                    outStream.writeObject(answer);
+                    
+                } catch (Exception e) {
+                    //TODO handle exception
+                    e.printStackTrace();
+                }
 //                answer.send(ipAddress);
                 break;
 
