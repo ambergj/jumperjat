@@ -69,11 +69,12 @@ public class Server extends Application implements ReceiverProtocol {
     @Override
     public void receiveProtocol(Protocol protocol, MyOutStream outStream) {
         Protocol answer;
+        User user;
         switch (protocol.getAction()){
             case CREATEUSER:
                 String name = protocol.getPayloadText();
 //                MyOutStream userOutStream = protocol.getPayloadOutStream();
-                User user = new User(name , outStream);
+                user = createUser(name , outStream);
                 //TODO if test is always false
                 if(user.equals(null)){
                     answer = new Protocol(ERRORUSER, null, null, "Username already in use.", null, null, null, null, null);
@@ -101,11 +102,11 @@ public class Server extends Application implements ReceiverProtocol {
                     modifyChatroom.addUsers(newUser);
                 }
                 else{
-                    createChatroom(chatroomName, sender);
+                    createChatroom(chatroomName, newUser);
                     getChatroom(chatroomName).addUsers(newUser);
                 }
                 Chatroom returnChatroom = getChatroom(chatroomName);
-                answer = new Protocol(DISTRIBUTECHATROOM, null, sender, null, null, null, null, returnChatroom, null);
+                answer = new Protocol(DISTRIBUTECHATROOM, null, newUser, null, null, null, null, returnChatroom, null);
                 try {
                     for(User usr : returnChatroom.getUserList()) {
                         usr.getOutStream().writeObject(answer);

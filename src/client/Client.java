@@ -95,7 +95,7 @@ public class Client extends Application implements ReceiverProtocol {
                     //TODO handle user already exists 
                     break;
                 case CONFIRMUSER:
-                    me = protocol.getPayloadUser();
+                    me = answer.getPayloadUser();
                     LoaderContainer<SelectChatroomController> lc = LoaderContainer.loadUI(this, "/clientView/selectChatroom.fxml", SelectChatroomController.class);
                     Parent root = lc.getRoot();
                     SelectChatroomController ctrlSelectChatroom = lc.getCtrl();

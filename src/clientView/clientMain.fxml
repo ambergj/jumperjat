@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<VBox fx:id="root" fx:controller="clientVies.MainViewController" xmlns:fx="http://javafx.com/fxml">
+<VBox fx:id="root" fx:controller="clientView.MainViewController" xmlns:fx="http://javafx.com/fxml">
     <HBox fx:id="hboxOptions">
         <Button fx:id="btnAddChatroom" text="Add Chatroom" />
         <Button fx:id="btnCloseChatroom" text="Close Chatroom" />

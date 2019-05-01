@@ -1,6 +1,7 @@
 package resources;
 
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * The Chatroom as resource to save Users and Messages.
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * @version 2.0
  * @since 1.8.0
  */
-public class Chatroom {
+public class Chatroom implements Serializable {
     private static int counter = 0;
     private int id;
     private String name;

@@ -41,6 +41,27 @@ public class User implements Serializable{
         this.id = counter;
         counter++;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        
+        if(o == null) {
+            return false;
+        }
+        
+        if(this.getClass() != o.getClass()) {
+            return false;
+        }
+        User other = (User) o;
+        if(this.getUsername().equals(other.getUsername())){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public int getId() {
         return id;
