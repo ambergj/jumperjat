@@ -69,12 +69,11 @@ public class Server extends Application implements ReceiverProtocol {
     @Override
     public void receiveProtocol(Protocol protocol, ObjectOutputStream outStream) {
         Protocol answer;
-        System.out.println("Ich bin jetzt hier!!!!");
         switch (protocol.getAction()){
             case CREATEUSER:
                 String name = protocol.getPayloadText();
-                String ipAddress = protocol.getPayloadIpAddress();
-                User user = new User(name , ipAddress);
+//                ObjectOutputStream userOutStream = protocol.getPayloadOutStream();
+                User user = new User(name , outStream);
                 //TODO if test is always false
                 if(user.equals(null)){
                     answer = new Protocol(ERRORUSER, null, null, "Username already in use.", null, null, null, null, null);
@@ -96,18 +95,21 @@ public class Server extends Application implements ReceiverProtocol {
                 User sender = protocol.getSender();
                 int id = getUserId(sender);
                 String chatroomName = protocol.getPayloadText();
+                User newUser = usersList.get(id);
                 if(chatroomExists(chatroomName)){
-                    User newUser = usersList.get(id);
                     Chatroom modifyChatroom = getChatroom(chatroomName);
                     modifyChatroom.addUsers(newUser);
                 }
                 else{
                     createChatroom(chatroomName, sender);
+                    getChatroom(chatroomName).addUsers(newUser);
                 }
                 Chatroom returnChatroom = getChatroom(chatroomName);
                 answer = new Protocol(DISTRIBUTECHATROOM, null, sender, null, null, null, null, returnChatroom, null);
                 try {
-                    outStream.writeObject(answer);
+                    for(User usr : returnChatroom.getUserList()) {
+                        usr.getOutStream().writeObject(answer);
+                    }
                 } catch (Exception e) {
                     //TODO handle exception
                     e.printStackTrace();
@@ -148,7 +150,7 @@ public class Server extends Application implements ReceiverProtocol {
         return false;
     }
 
-    public User createUser(String name, String ipAddress){
+    public User createUser(String name, ObjectOutputStream outStream){
         for(int i = 0; i < usersList.size(); i++){
             User testuser = usersList.get(i);
             String  testname = testuser.getUsername();
@@ -156,7 +158,7 @@ public class Server extends Application implements ReceiverProtocol {
                 return null;
             }
         }
-        User newUser = new User(name, ipAddress);
+        User newUser = new User(name, outStream);
         usersList.add(newUser);
         return newUser;
     }

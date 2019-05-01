@@ -1,6 +1,7 @@
 package resources;
 
 import java.io.Serializable;
+import java.io.ObjectOutputStream;
 
 /**
  * A Class that defines the Protocol for the Chat.
@@ -25,19 +26,19 @@ public class Protocol implements Serializable{
      * @param sender who Sent the Message
      * @param reciever who should recieve the message.
      * @param text Text Payload, Username, Error Message
-     * @param ipAddress Ip Address, to Send to
+     * @param outStream Output Stream, to Send to
      * @param user That is created by the Server
      * @param chatroomID For the Chatroom of The action: Join/Distribute/Leave
      * @param chatroom new Chatroom Object
      * @param message new Message Object
      */
     public Protocol(ProtocolType action, User sender, User reciever,
-                    String text, String ipAddress, User user, Integer chatroomID, Chatroom chatroom, Message message){
+                    String text, ObjectOutputStream outStream, User user, Integer chatroomID, Chatroom chatroom, Message message){
         this.action = action;
         this.sender = sender;
         this.reciever = reciever;
         this.payload[0] = text;
-        this.payload[1] = ipAddress;
+        this.payload[1] = outStream;
         this.payload[2] = user;
         this.payload[3] = chatroomID;
         this.payload[4] = chatroom;
@@ -64,8 +65,8 @@ public class Protocol implements Serializable{
         return (String) payload[0];
     }
 
-    public String getPayloadIpAddress() {
-        return (String) payload[1];
+    public ObjectOutputStream getPayloadOutStream() {
+        return (ObjectOutputStream) payload[1];
     }
 
     public User getPayloadUser() {

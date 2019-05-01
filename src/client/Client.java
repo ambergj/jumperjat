@@ -86,7 +86,7 @@ public class Client extends Application implements ReceiverProtocol {
             ip = "";
             e.printStackTrace();
         }
-        Protocol protocol = new Protocol(ProtocolType.CREATEUSER,null,null,username,ip, null, null, null, null);
+        Protocol protocol = new Protocol(ProtocolType.CREATEUSER, null, null, username, null, null, null, null, null);
         try {
             outStream.writeObject(protocol);
             Protocol answer = (Protocol)inStream.readObject();
@@ -119,6 +119,11 @@ public class Client extends Application implements ReceiverProtocol {
             switch (answer.getAction()) {
                 case DISTRIBUTECHATROOM:
                     Chatroom newChatroom = answer.getPayloadChatroom();
+                    LoaderContainer<MainViewController> lc = LoaderContainer.loadUI(this, "/clientView/clientMain.fxml", MainViewController.class);
+                    Parent root = lc.getRoot();
+                    MainViewController ctrlMainView = lc.getCtrl();
+                    ctrlMainView.setClient(this);
+                    primaryStage.setScene(new Scene(root));
                     break;
                 default:
                     break;

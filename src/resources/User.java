@@ -1,6 +1,7 @@
 package resources;
 
 import java.io.Serializable;
+import java.io.ObjectOutputStream;
 
 /**
  * A Class that represents a User with an unique id as String and and IP-address.
@@ -14,14 +15,14 @@ public class User implements Serializable{
     private static int counter = 0;
     private int id;
     private String username;
-    private String ipAddress;
+    private ObjectOutputStream outStream;
 
     /**
      * Constructs User with the params.
      * @param username
      * @param ipAddress
      */
-    public User(String username, String ipAddress){
+    public User(String username, ObjectOutputStream outStream){
         /*
         //eventual checking of Objects and throwing exception if already existing with that username
         //Probably much better to do it in Parent Class
@@ -36,7 +37,7 @@ public class User implements Serializable{
         */
 
         this.username = username;
-        this.ipAddress = ipAddress;
+        this.outStream = outStream;
         this.id = counter;
         counter++;
     }
@@ -49,7 +50,7 @@ public class User implements Serializable{
         return username;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public ObjectOutputStream getOutStream() {
+        return outStream;
     }
 }
