@@ -1,6 +1,9 @@
 package server;
 
 import java.net.*;
+
+import javafx.scene.control.Alert;
+
 import java.io.*;
 
 public class ClientHandler extends Thread{
@@ -19,6 +22,9 @@ public class ClientHandler extends Thread{
     public void run() {
         //TODO listen on port
         System.out.println("Server is listening!");
+        Alert alert = new Alert(null);
+        alert.setContentText("New listening Thread");
+        alert.showAndWait();
     }
     
 }

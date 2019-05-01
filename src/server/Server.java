@@ -49,8 +49,8 @@ public class Server extends Application implements ReceiverProtocol {
             //TODO change 'while true' to 'while not stopped'
             while(true) {
                 clientSocket = serverSocket.accept();
-                ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
                 ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
                 
                 Thread t = new ClientHandler(clientSocket, inStream, outStream);
                 t.start();

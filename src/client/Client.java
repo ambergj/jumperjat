@@ -57,8 +57,8 @@ public class Client extends Application implements ReceiverProtocol {
     public void connectToServer(String ip, int port) {
         try {
             clientSocket = new Socket(ip, port);
-            inStream = new ObjectInputStream(clientSocket.getInputStream());
             outStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            inStream = new ObjectInputStream(clientSocket.getInputStream());
             LoaderContainer<RetrieveUsernameController> lc = LoaderContainer.loadUI(this, "/clientView/retrieveUsername.fxml", RetrieveUsernameController.class);
             Parent root = lc.getRoot();
             RetrieveUsernameController ctrlRetrieveUsername = lc.getCtrl();
