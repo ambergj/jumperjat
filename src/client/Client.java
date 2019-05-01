@@ -99,7 +99,26 @@ public class Client extends Application implements ReceiverProtocol {
                     LoaderContainer<SelectChatroomController> lc = LoaderContainer.loadUI(this, "/clientView/selectChatroom.fxml", SelectChatroomController.class);
                     Parent root = lc.getRoot();
                     SelectChatroomController ctrlSelectChatroom = lc.getCtrl();
+                    ctrlSelectChatroom.setClient(this);
                     primaryStage.setScene(new Scene(root));
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+        }
+    }
+    
+    public void requestChatroom(String chatroom) {
+        Protocol protocol = new Protocol(ProtocolType.JOINCHATROOM, me, null, chatroom, null, null, null, null, null);
+        try {
+            outStream.writeObject(protocol);
+            Protocol answer = (Protocol)inStream.readObject();
+            switch (answer.getAction()) {
+                case DISTRIBUTECHATROOM:
+                    Chatroom newChatroom = answer.getPayloadChatroom();
                     break;
                 default:
                     break;

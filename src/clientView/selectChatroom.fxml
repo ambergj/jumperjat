@@ -9,5 +9,5 @@
         <Label fx:id="lblRequestChatroom">Join Chatroom:</Label>
         <TextField fx:id="tfChatroom" />
     </HBox>
-    <Button fx:id="btnRequestChatroom" text="Create" onAction="#requestChatroom"/>
+    <Button fx:id="btnRequestChatroom" text="Create" onAction="#joinChatroom"/>
 </VBox>

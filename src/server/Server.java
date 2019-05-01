@@ -80,7 +80,6 @@ public class Server extends Application implements ReceiverProtocol {
                     answer = new Protocol(ERRORUSER, null, null, "Username already in use.", null, null, null, null, null);
                 }
                 else{
-                    Object[] payload = {null, null, user, null, null, null};
                     answer = new Protocol(CONFIRMUSER, null, user, null, null, user, null, null, null);
                 }
                 try {
@@ -106,7 +105,13 @@ public class Server extends Application implements ReceiverProtocol {
                     createChatroom(chatroomName, sender);
                 }
                 Chatroom returnChatroom = getChatroom(chatroomName);
-                //TODO create Protocol with Chatroom and Send
+                answer = new Protocol(DISTRIBUTECHATROOM, null, sender, null, null, null, null, returnChatroom, null);
+                try {
+                    outStream.writeObject(answer);
+                } catch (Exception e) {
+                    //TODO handle exception
+                    e.printStackTrace();
+                }
                 break;
 
             case DISTRIBUTEMESSAGE:
