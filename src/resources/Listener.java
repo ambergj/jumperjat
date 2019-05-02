@@ -13,7 +13,7 @@ import java.io.*;
  * @version 2.0
  * @since 1.8.0
  */
-public class Listener implements Runnable {
+public class Listener extends Thread{
     
     private ReceiverProtocol subscriber;
     private Protocol protocol;
