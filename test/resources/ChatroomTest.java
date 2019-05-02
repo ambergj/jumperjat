@@ -3,24 +3,36 @@ package resources;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChatroomTest {
+    
+    private Chatroom chatroom;
+    private User creator;
+    
+    @BEFORECLASS
+    void setupTesting() {
+        
+    }
+    
 
-    @org.junit.jupiter.api.Test
+    @TEST
     void addUsers() {
+        
     }
 
-    @org.junit.jupiter.api.Test
+    @TEST
     void removeUser() {
+        User user = new User("TEST", new MyOutStream(new OutputStream())));
+        
     }
 
-    @org.junit.jupiter.api.Test
+    @TEST
     void addMessage() {
     }
 
-    @org.junit.jupiter.api.Test
+    @TEST
     void getUserList() {
     }
 
-    @org.junit.jupiter.api.Test
+    @TEST
     void getName() {
     }
 }

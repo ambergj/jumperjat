@@ -13,6 +13,10 @@ import java.io.ObjectOutputStream;
  */
 public class Protocol implements Serializable{
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2787184537583477608L;
     private ProtocolType action;
     private User sender;
     private User reciever;
