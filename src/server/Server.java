@@ -36,7 +36,8 @@ public class Server extends Application implements ReceiverProtocol {
     
     private ArrayList<Chatroom> chatroomsList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
-    
+
+    private boolean acceptConnections = true;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private Stage primaryStage;
@@ -78,19 +79,15 @@ public class Server extends Application implements ReceiverProtocol {
             ServerMainController ctrlServerMain = lc.getCtrl();
             ctrlServerMain.setServer(this);
             primaryStage.setScene(new Scene(root));
-            //TODO change 'while true' to 'while not stopped'
-            while(true) {
+            while(acceptConnections) {
                 clientSocket = serverSocket.accept();
                 MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
                 Thread t = new ClientHandler(this, inStream, outStream);
                 t.start();
             }
-        } catch (IOException e) {
+        } catch (IOException | IllegalAccessException | InstantiationException e) {
             //TODO handle exception
-            e.printStackTrace();
-        } catch (Exception e) {
-            //TODO handle exceptions
             e.printStackTrace();
         }
     }
@@ -111,7 +108,7 @@ public class Server extends Application implements ReceiverProtocol {
 //                MyOutStream userOutStream = protocol.getPayloadOutStream();
                 user = createUser(name , outStream);
                 //TODO if test is always false
-                if(user.equals(null)){
+                if(user == null){
                     answer = new Protocol(ERRORUSER, null, null, "Username already in use.", null, null, null, null, null);
                 }
                 else{
@@ -190,9 +187,8 @@ public class Server extends Application implements ReceiverProtocol {
      * @return true if the user object exists
      */
     public boolean userExists(User user){
-        for(int i = 0; i < usersList.size(); i++){
-            User testuser = usersList.get(i);
-            if(user.equals(testuser)){
+        for (User testuser : usersList) {
+            if (user.equals(testuser)) {
                 return true;
             }
         }
@@ -208,10 +204,9 @@ public class Server extends Application implements ReceiverProtocol {
      * @return the newly created user object
      */
     public User createUser(String name, MyOutStream outStream){
-        for(int i = 0; i < usersList.size(); i++){
-            User testuser = usersList.get(i);
-            String  testname = testuser.getUsername();
-            if(testname.equals(name)){
+        for (User testuser : usersList) {
+            String testname = testuser.getUsername();
+            if (testname.equals(name)) {
                 return null;
             }
         }
@@ -227,10 +222,9 @@ public class Server extends Application implements ReceiverProtocol {
      * @return true if there is already a chatroom using that name
      */
     public boolean chatroomExists(String chatroomName){
-        for(int i = 0; i < chatroomsList.size(); i++){
-            Chatroom testChatroom = chatroomsList.get(i);
-            String  testName = testChatroom.getName();
-            if(testName.equals(chatroomName)){
+        for (Chatroom testChatroom : chatroomsList) {
+            String testName = testChatroom.getName();
+            if (testName.equals(chatroomName)) {
                 return true;
             }
         }
@@ -244,10 +238,9 @@ public class Server extends Application implements ReceiverProtocol {
      * @return the requested chatroom object
      */
     public Chatroom getChatroom(String chatroomName){
-        for(int i = 0; i < chatroomsList.size(); i++){
-            Chatroom testChatroom = chatroomsList.get(i);
-            String  testName = testChatroom.getName();
-            if(testName.equals(chatroomName)){
+        for (Chatroom testChatroom : chatroomsList) {
+            String testName = testChatroom.getName();
+            if (testName.equals(chatroomName)) {
                 return testChatroom;
             }
         }
@@ -288,5 +281,9 @@ public class Server extends Application implements ReceiverProtocol {
      */
     private void joinChatroom(User newUser) {
         //TODO
+    }
+
+    public void setAcceptConnections(boolean acceptConnections) {
+        this.acceptConnections = acceptConnections;
     }
 }
