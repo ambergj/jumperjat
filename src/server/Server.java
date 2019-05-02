@@ -24,6 +24,16 @@ import static resources.ProtocolType.*;
  * @since 1.8.0
  */
 public class Server extends Application implements ReceiverProtocol {
+    
+    /**
+     * Main method of the server to launch the server
+     * 
+     * @param args Standard Input
+     */
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+    
     private ArrayList<Chatroom> chatroomsList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
     
@@ -73,13 +83,7 @@ public class Server extends Application implements ReceiverProtocol {
                 clientSocket = serverSocket.accept();
                 MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
-<<<<<<< HEAD
-                
                 Thread t = new ClientHandler(this, inStream, outStream);
-=======
-
-                Thread t = new ClientHandler(this, clientSocket, inStream, outStream);
->>>>>>> 3aa1546c791f546d16df35363dcec152ad9ae2e2
                 t.start();
             }
         } catch (IOException e) {
@@ -251,15 +255,6 @@ public class Server extends Application implements ReceiverProtocol {
     }
     
     /**
-     * This method adds a user to an existing chatroom
-     * 
-     * @param newUser User who wants to join an existing chatroom
-     */
-    private void joinChatroom(User newUser) {
-        //TODO
-    }
-    
-    /**
      * This method creates a new chatroom and directly adds the user who requested
      * this new chatroom.
      * 
@@ -287,11 +282,11 @@ public class Server extends Application implements ReceiverProtocol {
     }
     
     /**
-     * Main method of the server to launch the server
+     * This method adds a user to an existing chatroom
      * 
-     * @param args Standard Input
+     * @param newUser User who wants to join an existing chatroom
      */
-    public static void main(String[] args) {
-        Application.launch(args);
+    private void joinChatroom(User newUser) {
+        //TODO
     }
 }

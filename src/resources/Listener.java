@@ -18,8 +18,9 @@ public class Listener implements Runnable {
     private ReceiverProtocol subscriber;
     private Protocol protocol;
     private ObjectInputStream inStream;
+    private MyOutStream outStream;
     
-    public Listener(ReceiverProtocol subscriber, ObjectInputStream inStream) {
+    public Listener(ReceiverProtocol subscriber, ObjectInputStream inStream, MyOutStream outStream) {
         this.subscriber = subscriber;
         this.inStream = inStream;
     }
@@ -34,7 +35,7 @@ public class Listener implements Runnable {
             @Override
             public void run() {
                 //TODO fix
-                subscriber.receiveProtocol(protocol);
+                subscriber.receiveProtocol(protocol, outStream);
             }
         };
 

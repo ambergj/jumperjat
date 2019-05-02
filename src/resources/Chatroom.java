@@ -11,7 +11,9 @@ import java.io.Serializable;
  * @since 1.8.0
  */
 public class Chatroom implements Serializable {
+    
     private static int counter = 0;
+    
     private int id;
     private String name;
     private ArrayList<User> userList = new ArrayList<>();
@@ -22,6 +24,17 @@ public class Chatroom implements Serializable {
         this.id = counter;
         userList.add(newUser);
         counter++;
+    }
+    
+    /**
+     * Checks if the User isn't already in the List and adds the User.
+     *
+     * @param inputUser User to input in Chat
+     */
+    public void addUsers(User inputUser){
+        if (!userInChat(inputUser)) {
+            userList.add(inputUser);
+        }
     }
 
     /**
@@ -39,17 +52,6 @@ public class Chatroom implements Serializable {
             }
         }
         return false;
-    }
-
-    /**
-     * Checks if the User isn't already in the List and adds the User.
-     *
-     * @param inputUser User to input in Chat
-     */
-    public void addUsers(User inputUser){
-        if (!userInChat(inputUser)) {
-            userList.add(inputUser);
-        }
     }
 
     /**

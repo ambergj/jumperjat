@@ -42,7 +42,5 @@ public class SelectChatroomController {
     private void joinChatroom() {
         String chatroom = tfChatroom.getText();
         client.requestChatroom(chatroom);
-        //TODO implement method
     }
-    
 }

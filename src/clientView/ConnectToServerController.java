@@ -26,6 +26,13 @@ public class ConnectToServerController {
     @FXML
     private TextField tfServerPort;
     
+    /**
+     * This method receives the client, which was loading this controller
+     * and stores it locally.
+     * The client object can later be used to hand controll back to the client.
+     * 
+     * @param client Client, which loaded this controller
+     */
     public void setClient(Client client) {
         this.client = client;
     }

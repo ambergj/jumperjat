@@ -22,6 +22,14 @@ import javafx.scene.Parent;
  */
 public class Client extends Application implements ReceiverProtocol {
     
+    /**
+     * Main method of the client to launch the client
+     * @param args Standard Input
+     */
+    public static void main(String args[]) {
+        Application.launch(args);
+    }
+    
     private Stage primaryStage;
     private Socket clientSocket;
     private ObjectInputStream inStream;
@@ -46,7 +54,8 @@ public class Client extends Application implements ReceiverProtocol {
             primaryStage.show();
         } catch (IOException e) {
             //TODO handle Exceptions
-            e.printStackTrace();
+            System.out.println("FEHLER: Das GUI konnte nicht geladen werden!");
+            e.getMessage();
         }
     }
     
@@ -72,7 +81,7 @@ public class Client extends Application implements ReceiverProtocol {
             ctrlRetrieveUsername.setClient(this);
             primaryStage.setScene(new Scene(root));
             
-        } catch (Exception e) {
+        } catch (IOException | IllegalAccessException | InstantiationException e) {
             //TODO handle exception
             e.printStackTrace();
         }
@@ -93,21 +102,21 @@ public class Client extends Application implements ReceiverProtocol {
             Protocol answer = (Protocol)inStream.readObject();
             //TODO receiveProtocol(answer, null);
             switch (answer.getAction()) {
-                case ERRORUSER:
-                    //TODO handle user already exists  retry
-                    break;
-                case CONFIRMUSER:
-                    me = answer.getPayloadUser();
-                    LoaderContainer<SelectChatroomController> lc = LoaderContainer.loadUI(this, "/clientView/selectChatroom.fxml", SelectChatroomController.class);
-                    Parent root = lc.getRoot();
-                    SelectChatroomController ctrlSelectChatroom = lc.getCtrl();
-                    ctrlSelectChatroom.setClient(this);
-                    primaryStage.setScene(new Scene(root));
-                    break;
-                default:
-                    break;
+            case ERRORUSER:
+                //TODO handle user already exists  retry
+                break;
+            case CONFIRMUSER:
+                me = answer.getPayloadUser();
+                LoaderContainer<SelectChatroomController> lc = LoaderContainer.loadUI(this, "/clientView/selectChatroom.fxml", SelectChatroomController.class);
+                Parent root = lc.getRoot();
+                SelectChatroomController ctrlSelectChatroom = lc.getCtrl();
+                ctrlSelectChatroom.setClient(this);
+                primaryStage.setScene(new Scene(root));
+                break;
+            default:
+                break;
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             //TODO handle exception
             e.printStackTrace();
         }
@@ -187,15 +196,6 @@ public class Client extends Application implements ReceiverProtocol {
                 break;
             default:
                 break;
-
         }
-    }
-    
-    /**
-     * Main method of the client to launch the client
-     * @param args Standard Input
-     */
-    public static void main(String args[]) {
-        Application.launch(args);
     }
 }
