@@ -36,6 +36,7 @@ public class Listener implements Runnable {
             public void run() {
                 //TODO fix
                 subscriber.receiveProtocol(protocol, outStream);
+
             }
         };
 

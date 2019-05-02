@@ -100,23 +100,8 @@ public class Client extends Application implements ReceiverProtocol {
         try {
             outStream.writeObject(protocol);
             Protocol answer = (Protocol)inStream.readObject();
-            //TODO receiveProtocol(answer, null);
-            switch (answer.getAction()) {
-            case ERRORUSER:
-                //TODO handle user already exists  retry
-                break;
-            case CONFIRMUSER:
-                me = answer.getPayloadUser();
-                LoaderContainer<SelectChatroomController> lc = LoaderContainer.loadUI(this, "/clientView/selectChatroom.fxml", SelectChatroomController.class);
-                Parent root = lc.getRoot();
-                SelectChatroomController ctrlSelectChatroom = lc.getCtrl();
-                ctrlSelectChatroom.setClient(this);
-                primaryStage.setScene(new Scene(root));
-                break;
-            default:
-                break;
-            }
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            receiveProtocol(answer, null);
+        } catch (IOException | ClassNotFoundException e) {
             //TODO handle exception
             e.printStackTrace();
         }
@@ -135,19 +120,7 @@ public class Client extends Application implements ReceiverProtocol {
         try {
             outStream.writeObject(protocol);
             Protocol answer = (Protocol)inStream.readObject();
-            //TODO receiveProtocol(answer, outStream);
-            switch (answer.getAction()) {
-                case DISTRIBUTECHATROOM:
-                    Chatroom newChatroom = answer.getPayloadChatroom();
-                    LoaderContainer<MainViewController> lc = LoaderContainer.loadUI(this, "/clientView/clientMain.fxml", MainViewController.class);
-                    Parent root = lc.getRoot();
-                    MainViewController ctrlMainView = lc.getCtrl();
-                    ctrlMainView.setClient(this);
-                    primaryStage.setScene(new Scene(root));
-                    break;
-                default:
-                    break;
-            }
+            receiveProtocol(answer, outStream);
         } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
