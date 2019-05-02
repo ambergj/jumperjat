@@ -17,6 +17,7 @@ public class Chatroom implements Serializable {
     private int id;
     private String name;
     private ArrayList<User> userList = new ArrayList<>();
+
     private ArrayList<Message> messageHistory = new ArrayList<>();
 
     public Chatroom(String name, User newUser){
@@ -25,16 +26,18 @@ public class Chatroom implements Serializable {
         userList.add(newUser);
         counter++;
     }
-    
+
     /**
      * Checks if the User isn't already in the List and adds the User.
      *
      * @param inputUser User to input in Chat
      */
-    public void addUsers(User inputUser){
+    public boolean addUsers(User inputUser){
         if (!userInChat(inputUser)) {
             userList.add(inputUser);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -86,5 +89,13 @@ public class Chatroom implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<Message> getMessageHistory() {
+        return messageHistory;
+    }
+
+    public int getId() {
+        return id;
     }
 }
