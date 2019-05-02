@@ -53,7 +53,7 @@ public class Server extends Application implements ReceiverProtocol {
                 clientSocket = serverSocket.accept();
                 MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
-                
+
                 Thread t = new ClientHandler(this, clientSocket, inStream, outStream);
                 t.start();
             }

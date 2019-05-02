@@ -90,9 +90,10 @@ public class Client extends Application implements ReceiverProtocol {
         try {
             outStream.writeObject(protocol);
             Protocol answer = (Protocol)inStream.readObject();
+            //TODO receiveProtocol(answer, null);
             switch (answer.getAction()) {
                 case ERRORUSER:
-                    //TODO handle user already exists 
+                    //TODO handle user already exists  retry
                     break;
                 case CONFIRMUSER:
                     me = answer.getPayloadUser();
@@ -116,6 +117,7 @@ public class Client extends Application implements ReceiverProtocol {
         try {
             outStream.writeObject(protocol);
             Protocol answer = (Protocol)inStream.readObject();
+            // receiveProtocol(answer, null)
             switch (answer.getAction()) {
                 case DISTRIBUTECHATROOM:
                     Chatroom newChatroom = answer.getPayloadChatroom();
