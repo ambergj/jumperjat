@@ -73,8 +73,13 @@ public class Server extends Application implements ReceiverProtocol {
                 clientSocket = serverSocket.accept();
                 MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
+<<<<<<< HEAD
                 
                 Thread t = new ClientHandler(this, inStream, outStream);
+=======
+
+                Thread t = new ClientHandler(this, clientSocket, inStream, outStream);
+>>>>>>> 3aa1546c791f546d16df35363dcec152ad9ae2e2
                 t.start();
             }
         } catch (IOException e) {

@@ -33,11 +33,12 @@ public class Listener implements Runnable {
         Runnable updater = new Runnable() {
             @Override
             public void run() {
+                //TODO fix
                 subscriber.receiveProtocol(protocol);
             }
         };
-        
-        
+
+
         //While true: keep listening
         //TODO change 'while true' to 'while not isInterrupted()'
         while(true) {
