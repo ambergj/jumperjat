@@ -34,7 +34,7 @@ public class Listener implements Runnable {
             @Override
             public void run() {
                 //TODO fix
-                subscriber.receiveProtocol(protocol);
+                //subscriber.receiveProtocol(protocol);
             }
         };
 
