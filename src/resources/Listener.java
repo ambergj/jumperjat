@@ -25,7 +25,7 @@ public class Listener implements Runnable {
     }
 
     /**
-     * Run methode for thread with runnable
+     * Run method for thread with runnable
      */
     @Override
     public void run() {

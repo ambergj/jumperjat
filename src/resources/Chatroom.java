@@ -28,7 +28,7 @@ public class Chatroom implements Serializable {
      * chechs if a user is in this Instancechat.
      *
      * @param firstUser to test if in Chat
-     * @return boolean
+     * @return boolean true if the user is in this chat instance
      */
     private boolean userInChat(User firstUser){
         String firstUserName = firstUser.getUsername();

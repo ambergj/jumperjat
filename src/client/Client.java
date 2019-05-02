@@ -12,20 +12,27 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
 
+/**
+ * The Client-Class represents an instance of a running Client-Program
+ * It is the main class for a Client; Only one instance per client is needed.
+ * 
+ * @author ambergj, luescherphi
+ * @version 2.0
+ * @since 1.8.0
+ */
 public class Client extends Application implements ReceiverProtocol {
     
     private Stage primaryStage;
-    private String serverIP;
-    
     private Socket clientSocket;
     private ObjectInputStream inStream;
     private MyOutStream outStream;
-    
     private User me;
     
     /**
      * This method launches the first UI-Layout, where a User enters the
      * IP-Address and Port of the Server
+     * 
+     * @param primaryStage main stage for the application
      */
     @Override
     public void start(Stage primaryStage) {
@@ -48,6 +55,7 @@ public class Client extends Application implements ReceiverProtocol {
      * First, a connection to the server is established using
      * the given IP-Address and Port from the preceeding UI.
      * Second, the UI to retrieve the username is loaded
+     * 
      * @param ip Server-IP
      * @param port Port on which the server is listening
      */
@@ -70,22 +78,15 @@ public class Client extends Application implements ReceiverProtocol {
         }
     }
     
+    /**
+     * This is the third logic-method in the process of  client startup.
+     * First, a protocol object is created to send a New-User-Request to the server,
+     * second, the answer of the server is awaited and the client reacts accordingly.
+     * On success, the next UI to retrieve the Chatroom name is loaded.
+     * 
+     * @param username the username the user would like to have
+     */
     public void requestUsername(String username) {
-        //Protokoll-Objekt erstellen
-        String ip = null;
-        try{
-            //get local ip address:
-            final DatagramSocket socket = new DatagramSocket();
-            //find out, which adapter is able to connect to internet (8.8.8.8)
-            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-            //retrieve ip address
-            ip = socket.getLocalAddress().getHostAddress();
-            socket.close();
-        } catch (Exception e) {
-            //TODO handle exceptions
-            ip = "";
-            e.printStackTrace();
-        }
         Protocol protocol = new Protocol(ProtocolType.CREATEUSER, null, null, username, null, null, null, null, null);
         try {
             outStream.writeObject(protocol);
@@ -111,6 +112,14 @@ public class Client extends Application implements ReceiverProtocol {
         }
     }
     
+    /**
+     * This is the fourth logic-method in the process of client startup.
+     * First, a new protocol object is created to request the given Chatroom from the server,
+     * secont, the answer is awaited and the client reacts accordingly.
+     * On Success, the new Chatroom is saved and the next UI, the main Client-UI, is loaded.
+     * 
+     * @param chatroom Chatroom name of the chatroom the user wants to join.
+     */
     public void requestChatroom(String chatroom) {
         Protocol protocol = new Protocol(ProtocolType.JOINCHATROOM, me, null, chatroom, null, null, null, null, null);
         try {
@@ -134,6 +143,12 @@ public class Client extends Application implements ReceiverProtocol {
         }
     }
     
+    /**
+     * Implementation of the interface method to process server messages
+     * 
+     * @param protocol Protocol sent from server
+     * @param outStream Output stream to send back answers if needed
+     */
     @Override
     public void receiveProtocol(Protocol protocol, MyOutStream outStream) {
         //TODO Logik einfügen
@@ -164,6 +179,10 @@ public class Client extends Application implements ReceiverProtocol {
         }
     }
     
+    /**
+     * Main method of the client to launch the client
+     * @param args Standard Input
+     */
     public static void main(String args[]) {
         Application.launch(args);
     }

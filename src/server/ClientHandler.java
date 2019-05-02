@@ -7,17 +7,22 @@ import java.io.*;
 
 import javafx.scene.control.Alert;
 
-
+/**
+ * The ClientHandler class provides Thread objects which are run on the client
+ * and constantly listen to incoming packets from the server and transmit them to the client.
+ * 
+ * @author luescherphi
+ * @version 2.0
+ * @since 1.8.0
+ */
 public class ClientHandler extends Thread{
 
     private Server server;
-    private Socket clientSocket;
     private ObjectInputStream inStream;
     private MyOutStream outStream;
     
-    public ClientHandler(Server server, Socket clientSocket, ObjectInputStream inStream, MyOutStream outStream) {
+    public ClientHandler(Server server, ObjectInputStream inStream, MyOutStream outStream) {
         this.server = server;
-        this.clientSocket = clientSocket;
         this.inStream = inStream;
         this.outStream = outStream;
     }

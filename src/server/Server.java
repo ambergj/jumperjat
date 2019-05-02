@@ -15,6 +15,14 @@ import java.util.ArrayList;
 
 import static resources.ProtocolType.*;
 
+/**
+ * The Server-Class represents an instance of a running Server-Program
+ * It is the main class for a server; Only one instance per server is needed.
+ * 
+ * @author ambergj, luescherphi
+ * @version 2.0
+ * @since 1.8.0
+ */
 public class Server extends Application implements ReceiverProtocol {
     private ArrayList<Chatroom> chatroomsList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
@@ -23,6 +31,12 @@ public class Server extends Application implements ReceiverProtocol {
     private Socket clientSocket;
     private Stage primaryStage;
     
+    /**
+     * This method launches the first UI-Layout, where a user enters the port
+     * the server should listen on.
+     * 
+     * @param primaryStage main stage for the application
+     */
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -40,6 +54,12 @@ public class Server extends Application implements ReceiverProtocol {
         }
     }
     
+    /**
+     * This method is started by the first server UI. It opens a constantly listening socket,
+     * loads a second UI and propagates incoming requests to individual thread objects.
+     * 
+     * @param port Port number the server listens on
+     */
     public void launchServer(int port) {
         try {
             serverSocket = new ServerSocket(port);
@@ -54,7 +74,7 @@ public class Server extends Application implements ReceiverProtocol {
                 MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
                 
-                Thread t = new ClientHandler(this, clientSocket, inStream, outStream);
+                Thread t = new ClientHandler(this, inStream, outStream);
                 t.start();
             }
         } catch (IOException e) {
@@ -65,7 +85,13 @@ public class Server extends Application implements ReceiverProtocol {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Implementation of the interface method to process client requests
+     * 
+     * @param protocol Protocol sent from client
+     * @param outStream Output stream to send back answers if needed
+     */
     @Override
     public void receiveProtocol(Protocol protocol, MyOutStream outStream) {
         Protocol answer;
@@ -130,7 +156,14 @@ public class Server extends Application implements ReceiverProtocol {
                 break;
         }
     }
-
+    
+    /**
+     * This method returns the user id, if the requested user object allready exists,
+     * -1 otherwise.
+     * 
+     * @param user The user object to be tested
+     * @return the user id or -1
+     */
     public int getUserId(User user){
         for(int i = 0; i < usersList.size(); i++){
             User testuser = usersList.get(i);
@@ -140,7 +173,13 @@ public class Server extends Application implements ReceiverProtocol {
         }
         return -1;
     }
-
+    
+    /**
+     * This method tests if the user object already exists
+     * 
+     * @param user The user object to be tested
+     * @return true if the user object exists
+     */
     public boolean userExists(User user){
         for(int i = 0; i < usersList.size(); i++){
             User testuser = usersList.get(i);
@@ -150,7 +189,15 @@ public class Server extends Application implements ReceiverProtocol {
         }
         return false;
     }
-
+    
+    /**
+     * This method is used to create new user objects. It first checks if the requested
+     * username is already in use or not.
+     * 
+     * @param name desired username
+     * @param outStream Output-Stream, on which replies can be sent back to the user
+     * @return the newly created user object
+     */
     public User createUser(String name, MyOutStream outStream){
         for(int i = 0; i < usersList.size(); i++){
             User testuser = usersList.get(i);
@@ -163,7 +210,13 @@ public class Server extends Application implements ReceiverProtocol {
         usersList.add(newUser);
         return newUser;
     }
-
+    
+    /**
+     * This method checks whether a chatroom with the requested name already exists or not
+     * 
+     * @param chatroomName name of the requested chatroom
+     * @return true if there is already a chatroom using that name
+     */
     public boolean chatroomExists(String chatroomName){
         for(int i = 0; i < chatroomsList.size(); i++){
             Chatroom testChatroom = chatroomsList.get(i);
@@ -174,7 +227,13 @@ public class Server extends Application implements ReceiverProtocol {
         }
         return false;
     }
-
+    
+    /**
+     * This method returns a chatroom object out of the chatroom list based on its name
+     * 
+     * @param chatroomName name of the requested chatroom
+     * @return the requested chatroom object
+     */
     public Chatroom getChatroom(String chatroomName){
         for(int i = 0; i < chatroomsList.size(); i++){
             Chatroom testChatroom = chatroomsList.get(i);
@@ -185,28 +244,48 @@ public class Server extends Application implements ReceiverProtocol {
         }
         return null;
     }
-
+    
+    /**
+     * This method adds a user to an existing chatroom
+     * 
+     * @param newUser User who wants to join an existing chatroom
+     */
     private void joinChatroom(User newUser) {
         //TODO
     }
-
+    
+    /**
+     * This method creates a new chatroom and directly adds the user who requested
+     * this new chatroom.
+     * 
+     * @param name Name of the new chatroom
+     * @param newUser user who requested the new chatroom
+     */
     public void createChatroom(String name, User newUser){
         Chatroom chatroom = new Chatroom(name, newUser);
         chatroomsList.add(chatroom);
     }
 
+    /**
+     * This method distributes a new message to all members of a chatroom
+     * 
+     * @param chatroomID chatroom id in which a new message was created
+     * @param message the new message
+     */
     public void distributeMessage(int chatroomID, Message message){
         Chatroom chatroom = chatroomsList.get(chatroomID);
         ArrayList<User> users = chatroom.getUserList();
         for (User user : users) {
             Protocol answer = new Protocol (DISTRIBUTEMESSAGE, null, user, null, null, null, null, chatroom, message);
+            //TODO send the protocol object
         }
     }
-
-    public void sendProtocol(Protocol protocol, String ip){
-        //TODO Sends Protocol to target IP given in Protocol
-    }
     
+    /**
+     * Main method of the server to launch the server
+     * 
+     * @param args Standard Input
+     */
     public static void main(String[] args) {
         Application.launch(args);
     }

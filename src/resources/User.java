@@ -23,6 +23,7 @@ public class User implements Serializable{
      * @param ipAddress
      */
     public User(String username, MyOutStream outStream){
+        //TODO Was ist mit dem folgenden Block
         /*
         //eventual checking of Objects and throwing exception if already existing with that username
         //Probably much better to do it in Parent Class

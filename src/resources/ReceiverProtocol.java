@@ -1,7 +1,5 @@
 package resources;
 
-import java.io.ObjectOutputStream;
-
 /**
  * The ReceiverProtocol-Interface defines objects, that provide a method
  * to compute a Protocol-Object

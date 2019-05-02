@@ -45,10 +45,6 @@ public class Protocol implements Serializable{
         this.payload[5] = message;
     }
 
-    public void send(String ipAddress) {
-        //TODO Send Protocol
-    }
-
     public ProtocolType getAction() {
         return action;
     }
