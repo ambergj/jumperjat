@@ -117,7 +117,7 @@ public class Client extends Application implements ReceiverProtocol {
         try {
             outStream.writeObject(protocol);
             Protocol answer = (Protocol)inStream.readObject();
-            // receiveProtocol(answer, null)
+            //TODO receiveProtocol(answer, outStream);
             switch (answer.getAction()) {
                 case DISTRIBUTECHATROOM:
                     Chatroom newChatroom = answer.getPayloadChatroom();
