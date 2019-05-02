@@ -19,8 +19,8 @@ public class User implements Serializable{
 
     /**
      * Constructs User with the params.
-     * @param username
-     * @param ipAddress
+     * @param username of User
+     * @param outStream Stream of User
      */
     public User(String username, MyOutStream outStream){
         //TODO Was ist mit dem folgenden Block
@@ -57,11 +57,7 @@ public class User implements Serializable{
             return false;
         }
         User other = (User) o;
-        if(this.getUsername().equals(other.getUsername())){
-            return true;
-        } else {
-            return false;
-        }
+        return this.getUsername().equals(other.getUsername());
     }
 
     public int getId() {
