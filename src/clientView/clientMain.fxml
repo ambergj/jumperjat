@@ -9,5 +9,14 @@
         <Button fx:id="btnCloseChatroom" text="Close Chatroom" />
     </HBox>
     <TabPane fx:id="tpChatrooms">
+        <Tab fx:id="tabMain" text="Chat 1" closable="false">
+                <VBox fx:id="vboxTab">
+                    <VBox fx:id="vboxChat" prefWidth="500" prefHeight="200"></VBox>
+                    <HBox spacing="10">
+                        <TextField fx:id="tfChatInput" prefWidth="420" prefHeight="40"></TextField>
+                        <Button prefWidth="70" prefHeight="40"></Button>
+                    </HBox>
+                </VBox>
+            </Tab>
     </TabPane>
 </VBox>
