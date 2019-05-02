@@ -36,8 +36,8 @@ public class Listener implements Runnable {
                 subscriber.receiveProtocol(protocol);
             }
         };
-        
-        
+
+
         //While true: keep listening
         //TODO change 'while true' to 'while not isInterrupted()'
         while(true) {

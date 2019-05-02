@@ -153,6 +153,16 @@ public class Client extends Application implements ReceiverProtocol {
                 //TODO handle user already exists
                 break;
             case DISTRIBUTECHATROOM:
+                try {
+                    Chatroom newChatroom = protocol.getPayloadChatroom();
+                    LoaderContainer<MainViewController> lc = LoaderContainer.loadUI(this, "/clientView/clientMain.fxml", MainViewController.class);
+                    Parent root = lc.getRoot();
+                    MainViewController ctrlMainView = lc.getCtrl();
+                    ctrlMainView.setClient(this);
+                    primaryStage.setScene(new Scene(root));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case DISTRIBUTEMESSAGE:
                 break;
