@@ -59,9 +59,8 @@ public class Server extends Application implements ReceiverProtocol {
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
             
-        } catch (Exception e) {
-            //TODO handle exceptions
-            e.printStackTrace();
+        } catch (IOException | IllegalAccessException | InstantiationException e) {
+            Utils.alertError("Das GUI konnte nicht geladen werden!" , e.getMessage());
         }
     }
     
@@ -79,17 +78,29 @@ public class Server extends Application implements ReceiverProtocol {
             ServerMainController ctrlServerMain = lc.getCtrl();
             ctrlServerMain.setServer(this);
             primaryStage.setScene(new Scene(root));
-            while(acceptConnections) {
-                clientSocket = serverSocket.accept();
-                MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
-                ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
-                Thread t = new ListenerServer(this, inStream, outStream);
-                t.setDaemon(true);
-                t.start();
-            }
+            Thread listen = new Thread(() -> {
+                while(acceptConnections) {
+                    try {
+                        clientSocket = serverSocket.accept();
+                        MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
+                        ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
+                        Thread t = new Listener(this, clientSocket, inStream, outStream);
+                        t.setDaemon(true);
+                        t.start();
+                        //clientSocket.close();
+                        
+                        
+                    } catch (Exception e) {
+                        this.alertError("Empfangen fehlgeschlagen!", e.getMessage());
+
+                    }
+                }
+                
+            });
+            listen.setDaemon(true);
+            listen.start();
         } catch (IOException | IllegalAccessException | InstantiationException e) {
-            //TODO handle exception
-            e.printStackTrace();
+            Utils.alertError("Das GUI konnte nicht geladen werden!" , e.getMessage());
         }
     }
     
@@ -118,9 +129,8 @@ public class Server extends Application implements ReceiverProtocol {
                 try {
                     outStream.writeObject(answer);
                     
-                } catch (Exception e) {
-                    //TODO handle exception
-                    e.printStackTrace();
+                } catch (IOException e) {
+                    Utils.alertError("Die Anfrage konnte nicht sauber verarbeitet werden!" , e.getMessage());
                 }
 //                answer.send(ipAddress);
                 break;
@@ -144,9 +154,9 @@ public class Server extends Application implements ReceiverProtocol {
                     for(User usr : returnChatroom.getUserList()) {
                         usr.getOutStream().writeObject(answer);
                     }
-                } catch (Exception e) {
-                    //TODO handle exception
+                } catch (IOException e) {
                     e.printStackTrace();
+                    Utils.alertError("Die Anfrage konnte nicht sauber verarbeitet werden!" , e.getMessage());
                 }
                 break;
 
@@ -157,11 +167,9 @@ public class Server extends Application implements ReceiverProtocol {
                     for(User usr : chatroom.getUserList()) {
                         usr.getOutStream().writeObject(protocol);
                     }
-                } catch (Exception e) {
-                    //TODO handle exception
-                    e.printStackTrace();
+                } catch (IOException e) {
+                    Utils.alertError("Die Anfrage konnte nicht sauber verarbeitet werden!" , e.getMessage());
                 }
-                //TODO Send Message to Chatroom members, with distributeMessage method
                 break;
 
             case LEAVECHATROOM:
@@ -283,6 +291,17 @@ public class Server extends Application implements ReceiverProtocol {
             Protocol answer = new Protocol (DISTRIBUTEMESSAGE, null, user, null, null, null, null, chatroom, message);
             //TODO send the protocol object
         }
+    }
+    
+    /**
+     * This method exsists so that the Listener Thread is able to display
+     * error messages. It calls the corresponding utils method
+     * 
+     * @param information Information
+     * @param errMessage Error Message
+     */
+    public void alertError(String information, String errMessage) {
+        Utils.alertError(information, errMessage);
     }
     
     /**

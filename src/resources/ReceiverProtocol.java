@@ -18,4 +18,13 @@ public interface ReceiverProtocol {
      * @param outStream Output-Stream to send the response to
      */
     public void receiveProtocol(Protocol p, MyOutStream outStream);
+    
+    /**
+     * This method exsists so that the Listener Thread is able to display
+     * error messages. It calls the corresponding utils method
+     * 
+     * @param information Information
+     * @param errMessage Error Message
+     */
+    public void alertError(String information, String errMessage);
 }

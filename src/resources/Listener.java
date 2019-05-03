@@ -3,6 +3,11 @@ package resources;
 import javafx.application.Platform;
 
 import java.io.*;
+import java.net.Socket;
+
+import server.Server;
+
+import client.Client;
 
 /**
  * When the Thread is started, the object constantly listens on the given InputStream for
@@ -19,8 +24,10 @@ public class Listener extends Thread{
     private Protocol protocol;
     private ObjectInputStream inStream;
     private MyOutStream outStream;
+    private Socket clientSocket;
     
-    public Listener(ReceiverProtocol subscriber, ObjectInputStream inStream, MyOutStream outStream) {
+    public Listener(ReceiverProtocol subscriber, Socket clientSocket, ObjectInputStream inStream, MyOutStream outStream) {
+        this.clientSocket = clientSocket;
         this.subscriber = subscriber;
         this.inStream = inStream;
         this.outStream = outStream;
@@ -35,9 +42,7 @@ public class Listener extends Thread{
         Runnable updater = new Runnable() {
             @Override
             public void run() {
-                //TODO fix
                 subscriber.receiveProtocol(protocol, outStream);
-
             }
         };
 
@@ -47,11 +52,20 @@ public class Listener extends Thread{
         while(true) {
             try {
                 protocol = (Protocol)inStream.readObject();
-                Platform.setImplicitExit(false);
-                Platform.runLater(updater);
-            } catch (IOException | ClassNotFoundException e) {
-                //TODO Handle Exceptions
-                e.printStackTrace();
+                    Platform.setImplicitExit(false);
+                    Platform.runLater(updater);
+                
+            } catch (ClassNotFoundException e) {
+                    Platform.setImplicitExit(false);
+                    Platform.runLater(() -> subscriber.alertError("Das Empfangen des Objektes ist fehlgeschlagen!" , e.getMessage()));
+            } catch (IOException e) {
+                try {
+                    clientSocket.close();
+                } catch (IOException ex) {
+                    //do nothing
+                } finally {
+                    this.stop();
+                }
             }
         }
     }

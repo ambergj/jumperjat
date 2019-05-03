@@ -12,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * The Client-Class represents an instance of a running Client-Program
@@ -57,9 +59,7 @@ public class Client extends Application implements ReceiverProtocol {
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
         } catch (IOException e) {
-            //TODO handle Exceptions
-            System.out.println("FEHLER: Das GUI konnte nicht geladen werden!");
-            e.getMessage();
+            Utils.alertError("Das GUI konnte nicht geladen werden!", e.getMessage());
         }
     }
     
@@ -86,8 +86,7 @@ public class Client extends Application implements ReceiverProtocol {
             primaryStage.setScene(new Scene(root));
             
         } catch (IOException | IllegalAccessException | InstantiationException e) {
-            //TODO handle exception
-            e.printStackTrace();
+            Utils.alertError("Das GUI konnte nicht geladen werden!", e.getMessage());
         }
     }
     
@@ -106,8 +105,7 @@ public class Client extends Application implements ReceiverProtocol {
             Protocol answer = (Protocol)inStream.readObject();
             receiveProtocol(answer, null);
         } catch (IOException | ClassNotFoundException e) {
-            //TODO handle exception
-            e.printStackTrace();
+            Utils.alertError("Das Erstellen eines neuen Users ist fehlgeschlagen!", e.getMessage());
         }
     }
     
@@ -125,9 +123,8 @@ public class Client extends Application implements ReceiverProtocol {
             outStream.writeObject(protocol);
             Protocol answer = (Protocol)inStream.readObject();
             receiveProtocol(answer, outStream);
-        } catch (Exception e) {
-            //TODO handle exception
-            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException e) {
+            Utils.alertError("Das Laden des gegebenen Chatrooms ist fehlgeschlagen!" , e.getMessage());
         }
     }
     
@@ -142,10 +139,8 @@ public class Client extends Application implements ReceiverProtocol {
         Protocol protocol = new Protocol(ProtocolType.DISTRIBUTEMESSAGE, me, null, null, null, null, null, null, msg);
         try {
             outStream.writeObject(protocol);
-//            Protocol answer = (Protocol)inStream.readObject();
-//            receiveProtocol(answer, outStream);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Utils.alertError("Das Versenden der Nachricht ist fehlgeschlagen!", e.getMessage());
         }
     }
     
@@ -167,8 +162,8 @@ public class Client extends Application implements ReceiverProtocol {
                     SelectChatroomController ctrlSelectChatroom = lc.getCtrl();
                     ctrlSelectChatroom.setClient(this);
                     primaryStage.setScene(new Scene(root));
-                }catch (Exception e){
-                    //TODO handle exception
+                }catch (IOException | IllegalAccessException | InstantiationException e){
+                    Utils.alertError("Das GUI konnte nicht geladen werden!" , e.getMessage());
                 }
                 break;
             case ERRORUSER:
@@ -188,11 +183,11 @@ public class Client extends Application implements ReceiverProtocol {
                         mainViewController.setClient(this);
                         mainViewController.init(newChatroom);
                         primaryStage.setScene(new Scene(root));
-                        Thread t = new Listener(this, inStream, outStream);
+                        Thread t = new Listener(this, clientSocket, inStream, outStream);
                         t.setDaemon(true);
                         t.start();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (IOException | IllegalAccessException | InstantiationException e) {
+                        Utils.alertError("Das GUI konnte nicht geladen werden!" , e.getMessage());
                     }
                 }
                 break;
@@ -205,5 +200,16 @@ public class Client extends Application implements ReceiverProtocol {
             default:
                 break;
         }
+    }
+    
+    /**
+     * This method exsists so that the Listener Thread is able to display
+     * error messages. It calls the corresponding utils method
+     * 
+     * @param information Information
+     * @param errMessage Error Message
+     */
+    public void alertError(String information, String errMessage) {
+        Utils.alertError(information, errMessage);
     }
 }
