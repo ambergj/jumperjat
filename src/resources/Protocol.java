@@ -1,7 +1,6 @@
 package resources;
 
 import java.io.Serializable;
-import java.io.ObjectOutputStream;
 
 /**
  * A Class that defines the Protocol for the Chat.

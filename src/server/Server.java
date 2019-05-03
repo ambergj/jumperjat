@@ -87,7 +87,6 @@ public class Server extends Application implements ReceiverProtocol {
                         Thread t = new Listener(this, clientSocket, inStream, outStream);
                         t.setDaemon(true);
                         t.start();
-                        //clientSocket.close();
                         
                         
                     } catch (Exception e) {
@@ -277,21 +276,6 @@ public class Server extends Application implements ReceiverProtocol {
         Chatroom chatroom = new Chatroom(name, newUser);
         chatroomsList.add(chatroom);
     }
-
-    /**
-     * This method distributes a new message to all members of a chatroom
-     * 
-     * @param chatroomID chatroom id in which a new message was created
-     * @param message the new message
-     */
-    public void distributeMessage(int chatroomID, Message message){
-        Chatroom chatroom = chatroomsList.get(chatroomID);
-        ArrayList<User> users = chatroom.getUserList();
-        for (User user : users) {
-            Protocol answer = new Protocol (DISTRIBUTEMESSAGE, null, user, null, null, null, null, chatroom, message);
-            //TODO send the protocol object
-        }
-    }
     
     /**
      * This method exsists so that the Listener Thread is able to display
@@ -305,14 +289,10 @@ public class Server extends Application implements ReceiverProtocol {
     }
     
     /**
-     * This method adds a user to an existing chatroom
+     * sets the checked variable for the never-ending listening
      * 
-     * @param newUser User who wants to join an existing chatroom
+     * @param acceptConnections
      */
-    private void joinChatroom(User newUser) {
-        //TODO
-    }
-
     public void setAcceptConnections(boolean acceptConnections) {
         this.acceptConnections = acceptConnections;
     }

@@ -75,12 +75,13 @@ public class MainViewController implements Initializable {
         this.client = client;
     }
     
+    /**
+     * calls the client method to display the input
+     * @param msg new Message
+     */
     public void displayNewMessage(Message msg) {
         
         Label newLabel = new Label(msg.getMessageText());
-        //TODO put new messages first
-//        ObservableList<Nodes> oldNodes = vboxChat.getChildren();
-//        vboxChat.getChildren().se
         vboxChat.getChildren().add(newLabel);
         
     }
@@ -93,6 +94,8 @@ public class MainViewController implements Initializable {
     @FXML
     private void send() {
         String message = tfChatInput.getText();
-        client.sendMessage(message, Integer.toString(chatroom.getId()));
+        if(!message.contentEquals("")) {
+            client.sendMessage(message, Integer.toString(chatroom.getId()));
+        }
     }
 }

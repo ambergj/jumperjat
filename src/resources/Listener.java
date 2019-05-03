@@ -25,6 +25,7 @@ public class Listener extends Thread{
     private ObjectInputStream inStream;
     private MyOutStream outStream;
     private Socket clientSocket;
+    private boolean run = true;
     
     public Listener(ReceiverProtocol subscriber, Socket clientSocket, ObjectInputStream inStream, MyOutStream outStream) {
         this.clientSocket = clientSocket;
@@ -49,7 +50,7 @@ public class Listener extends Thread{
 
         //While true: keep listening
         //TODO change 'while true' to 'while not isInterrupted()'
-        while(true) {
+        while(run) {
             try {
                 protocol = (Protocol)inStream.readObject();
                     Platform.setImplicitExit(false);
@@ -64,7 +65,8 @@ public class Listener extends Thread{
                 } catch (IOException ex) {
                     //do nothing
                 } finally {
-                    this.stop();
+                    run = false;
+//                    this.stop();
                 }
             }
         }
