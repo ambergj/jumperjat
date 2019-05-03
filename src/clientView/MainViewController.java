@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
+import resources.Chatroom;
+import resources.Message;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,6 +21,7 @@ import javafx.scene.layout.*;
 public class MainViewController implements Initializable {
     
     private Client client;
+    private Chatroom chatroom;
 
     @FXML
     private Button btnAddChatroom;
@@ -27,7 +30,16 @@ public class MainViewController implements Initializable {
     private Button btnCloseChatroom;
     
     @FXML
+    private TextField tfChatInput;
+    
+    @FXML
     private TabPane tpChatrooms;
+    
+    @FXML
+    private Tab tabMain;
+    
+    @FXML
+    private VBox vboxChat;
     
     /**
      * This method serves to load values from the Chatroom object and display
@@ -42,6 +54,16 @@ public class MainViewController implements Initializable {
         
     }
     
+    //TODO JAVADOC!!!
+    /**
+     * This method serves to 
+     * @param chatroom
+     */
+    public void init(Chatroom chatroom) {
+        this.chatroom = chatroom;
+        tabMain.setText(chatroom.getName());
+    }
+    
     /**
      * This method receives the client, which was loading this controller
      * and stores it locally.
@@ -51,5 +73,26 @@ public class MainViewController implements Initializable {
      */
     public void setClient(Client client) {
         this.client = client;
+    }
+    
+    public void displayNewMessage(Message msg) {
+        
+        Label newLabel = new Label(msg.getMessageText());
+        //TODO put new messages first
+//        ObservableList<Nodes> oldNodes = vboxChat.getChildren();
+//        vboxChat.getChildren().se
+        vboxChat.getChildren().add(newLabel);
+        
+    }
+    
+    /**
+     * This method is run when the user clicks on the Send-Button.
+     * It retrieves the message text from the TextField and sends
+     * it to the 'sendMessage()'-Method of the client.
+     */
+    @FXML
+    private void send() {
+        String message = tfChatInput.getText();
+        client.sendMessage(message, Integer.toString(chatroom.getId()));
     }
 }

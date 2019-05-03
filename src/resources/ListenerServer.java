@@ -13,14 +13,14 @@ import java.io.*;
  * @version 2.0
  * @since 1.8.0
  */
-public class Listener extends Thread{
+public class ListenerServer extends Thread{
     
     private ReceiverProtocol subscriber;
     private Protocol protocol;
     private ObjectInputStream inStream;
     private MyOutStream outStream;
     
-    public Listener(ReceiverProtocol subscriber, ObjectInputStream inStream, MyOutStream outStream) {
+    public ListenerServer(ReceiverProtocol subscriber, ObjectInputStream inStream, MyOutStream outStream) {
         this.subscriber = subscriber;
         this.inStream = inStream;
         this.outStream = outStream;
@@ -47,8 +47,7 @@ public class Listener extends Thread{
         while(true) {
             try {
                 protocol = (Protocol)inStream.readObject();
-                Platform.setImplicitExit(false);
-                Platform.runLater(updater);
+                subscriber.receiveProtocol(protocol, outStream);
             } catch (IOException | ClassNotFoundException e) {
                 //TODO Handle Exceptions
                 e.printStackTrace();
@@ -56,3 +55,4 @@ public class Listener extends Thread{
         }
     }
 }
+

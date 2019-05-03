@@ -5,6 +5,10 @@
 
 <VBox fx:id="root" fx:controller="serverView.StartServerController" xmlns:fx="http://javafx.com/fxml">
     <Label fx:id="lblTitle">Start a Server</Label>
+    <HBox fx:id="hboxServerIP">
+        <Label fx:id="lblIPDescription">The Server IP is:</Label>
+        <Label fx:id="lblIP"></Label>
+    </HBox>
     <HBox fx:id="hboxPort">
         <Label fx:id="lblPort">Enter listening Port:</Label>
         <TextField fx:id="txtPort" />

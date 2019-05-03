@@ -4,6 +4,7 @@ import resources.*;
 import clientView.*;
 
 import java.net.*;
+import java.time.LocalDateTime;
 import java.io.*;
 
 import javafx.application.Application;
@@ -35,6 +36,9 @@ public class Client extends Application implements ReceiverProtocol {
     private ObjectInputStream inStream;
     private MyOutStream outStream;
     private User me;
+    
+    private MainViewController mainViewController;
+    private Chatroom myChatroom = null;
     
     /**
      * This method launches the first UI-Layout, where a User enters the
@@ -128,6 +132,24 @@ public class Client extends Application implements ReceiverProtocol {
     }
     
     /**
+     * This method serves to send the newly written message
+     * to the server (and let it distribute the new message)
+     * 
+     * @param message Message to be sent to the server
+     */
+    public void sendMessage(String message, String chatroomID) {
+        Message msg = new Message(chatroomID, me.getUsername(), LocalDateTime.now(), message);
+        Protocol protocol = new Protocol(ProtocolType.DISTRIBUTEMESSAGE, me, null, null, null, null, null, null, msg);
+        try {
+            outStream.writeObject(protocol);
+//            Protocol answer = (Protocol)inStream.readObject();
+//            receiveProtocol(answer, outStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
      * Implementation of the interface method to process server messages
      * 
      * @param protocol Protocol sent from server
@@ -146,24 +168,37 @@ public class Client extends Application implements ReceiverProtocol {
                     ctrlSelectChatroom.setClient(this);
                     primaryStage.setScene(new Scene(root));
                 }catch (Exception e){
+                    //TODO handle exception
                 }
                 break;
             case ERRORUSER:
                 //TODO handle user already exists
                 break;
             case DISTRIBUTECHATROOM:
-                try {
-                    Chatroom newChatroom = protocol.getPayloadChatroom();
-                    LoaderContainer<MainViewController> lc = LoaderContainer.loadUI(this, "/clientView/clientMain.fxml", MainViewController.class);
-                    Parent root = lc.getRoot();
-                    MainViewController ctrlMainView = lc.getCtrl();
-                    ctrlMainView.setClient(this);
-                    primaryStage.setScene(new Scene(root));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                Chatroom newChatroom = protocol.getPayloadChatroom();
+                if(this.myChatroom != null && this.myChatroom.getId() == newChatroom.getId()) {
+                    Message msg = new Message(Integer.toString(newChatroom.getId()), "Server", LocalDateTime.now(), "New User joined");
+                    mainViewController.displayNewMessage(msg);
+                } else {
+                    this.myChatroom = newChatroom;
+                    try {
+                        LoaderContainer<MainViewController> lc = LoaderContainer.loadUI(this, "/clientView/clientMain.fxml", MainViewController.class);
+                        Parent root = lc.getRoot();
+                        this.mainViewController = lc.getCtrl();
+                        mainViewController.setClient(this);
+                        mainViewController.init(newChatroom);
+                        primaryStage.setScene(new Scene(root));
+                        Thread t = new Listener(this, inStream, outStream);
+                        t.setDaemon(true);
+                        t.start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case DISTRIBUTEMESSAGE:
+                Message msg = protocol.getPayloadMessage();
+                mainViewController.displayNewMessage(msg);
                 break;
             case LEAVECHATROOM:
                 break;

@@ -1,6 +1,7 @@
 package resources;
 
 import java.time.LocalDateTime;
+import java.io.Serializable;
 
 /**
  * A Class for the Message Object. It contains the Author, Timestamp and the Message Text.
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
  * @version 2.0
  * @since 1.8.0
  */
-public class Message {
+public class Message implements Serializable{
     private String chatroomID;
     private LocalDateTime timestamp;
     private String author;

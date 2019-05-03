@@ -83,7 +83,8 @@ public class Server extends Application implements ReceiverProtocol {
                 clientSocket = serverSocket.accept();
                 MyOutStream outStream = new MyOutStream(clientSocket.getOutputStream());
                 ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
-                Thread t = new Listener(this, inStream, outStream);
+                Thread t = new ListenerServer(this, inStream, outStream);
+                t.setDaemon(true);
                 t.start();
             }
         } catch (IOException | IllegalAccessException | InstantiationException e) {
@@ -150,6 +151,16 @@ public class Server extends Application implements ReceiverProtocol {
                 break;
 
             case DISTRIBUTEMESSAGE:
+                Message msg = protocol.getPayloadMessage();
+                Chatroom chatroom = chatroomsList.get(Integer.parseInt(msg.getChatroomID()));
+                try {
+                    for(User usr : chatroom.getUserList()) {
+                        usr.getOutStream().writeObject(protocol);
+                    }
+                } catch (Exception e) {
+                    //TODO handle exception
+                    e.printStackTrace();
+                }
                 //TODO Send Message to Chatroom members, with distributeMessage method
                 break;
 
